@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astrologie APP Mada - Édition Impériale</title>
+    <!-- Tailwind CSS pour un design de niveau système d'exploitation moderne -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts premium épurées -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome pour la richesse iconographique céleste -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        cosmic: {
+                            void: '#030407',
+                            voidLight: '#ffffff',
+                            space: '#080a10',
+                            spaceLight: '#f3f4f6',
+                            card: '#0e111a',
+                            cardLight: '#ffffff',
+                            gold: '#dfb76c',
+                            goldLight: '#f4dfb2',
+                            accent: '#4f46e5',
+                            cyan: '#06b6d4',
+                            purple: '#9333ea'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .apple-blur {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #dfb76c 0%, #f4dfb2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 25px rgba(223, 183, 108, 0.25);
+            border-color: rgba(223, 183, 108, 0.4);
+        }
+        .star-particle {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: pulseStar 4s infinite ease-in-out;
+        }
+        @keyframes pulseStar {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.95; }
+        }
+        /* Custom UI Scrollbars */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(223, 183, 108, 0.2);
+            border-radius: 99px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(223, 183, 108, 0.5);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased transition-colors duration-500 bg-cosmic-void text-gray-200 dark:bg-cosmic-void dark:text-gray-200 light:bg-cosmic-voidLight light:text-gray-800">
+
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-40">
+        <div id="starry-backdrop" class="relative w-full h-full"></div>
+    </div>
+
+    <!-- Barre de Navigation de Style Apple -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-cosmic-void/80 dark:bg-cosmic-void/80 light:bg-white/80 apple-blur transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cosmic-gold to-cosmic-goldLight p-[1.5px] shadow-lg">
+                    <div class="w-full h-full rounded-full bg-cosmic-void flex items-center justify-center">
+                        <svg class="w-5 h-5 text-cosmic-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                        </svg>
+                    </div>
+                </div>
+                <div>
+                    <span class="font-serif tracking-tight font-bold text-lg text-white dark:text-white light:text-cosmic-void">Astrologie APP Mada</span>
+                    <span class="block text-[9px] text-gray-400 tracking-widest uppercase -mt-1" id="nav-system-tag">MOTEUR IMPÉRIAL REVERSÉ</span>
+                </div>
+            </div>
+
+            <!-- Boutons de contrôle système -->
+            <div class="flex items-center gap-3">
+                <!-- Selecteur de langue -->
+                <div class="flex bg-white/5 dark:bg-white/5 light:bg-black/5 rounded-lg p-0.5 border border-white/10 text-[11px] font-bold">
+                    <button id="lang-fr" onclick="changeLanguage('fr')" class="px-2.5 py-1 rounded bg-cosmic-gold text-cosmic-void transition-all duration-300 cursor-pointer">FR</button>
+                    <button id="lang-mg" onclick="changeLanguage('mg')" class="px-2.5 py-1 rounded text-gray-400 hover:text-white transition-all duration-300 cursor-pointer">MG</button>
+                </div>
+
+                <!-- Bascule Mode Clair / Sombre -->
+                <button onclick="toggleSystemTheme()" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all cursor-pointer text-cosmic-gold">
+                    <i class="fa-solid fa-circle-half-stroke" id="theme-icon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu principal par onglets -->
+    <div class="sticky top-16 z-40 bg-cosmic-space/95 border-b border-white/5 py-3">
+        <div class="max-w-7xl mx-auto px-4 overflow-x-auto flex gap-2 no-scrollbar">
+            <button onclick="switchAppTab('portrait')" id="tab-portrait" class="tab-button px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 bg-cosmic-gold/20 text-cosmic-gold border border-cosmic-gold/30">
+                <i class="fa-solid fa-id-card-clip mr-1.5"></i> <span data-i18n="tab_portrait">Portrait Natal & Ciel</span>
+            </button>
+            <button onclick="switchAppTab('elements')" id="tab-elements" class="tab-button px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 text-gray-400 hover:text-white bg-white/5 border border-transparent">
+                <i class="fa-solid fa-chart-pie mr-1.5"></i> <span data-i18n="tab_dominants">Dominantes & Éléments</span>
+            </button>
+            <button onclick="switchAppTab('synastrie')" id="tab-synastrie" class="tab-button px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 text-gray-400 hover:text-white bg-white/5 border border-transparent">
+                <i class="fa-solid fa-people-arrows mr-1.5"></i> <span data-i18n="tab_synastry">Synastrie & Compatibilité</span>
+            </button>
+            <button onclick="switchAppTab('predictions')" id="tab-predictions" class="tab-button px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 text-gray-400 hover:text-white bg-white/5 border border-transparent">
+                <i class="fa-solid fa-calendar-days mr-1.5"></i> <span data-i18n="tab_forecasts">Cycles & Prévisions</span>
+            </button>
+            <button onclick="switchAppTab('synthese')" id="tab-synthese" class="tab-button px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 text-gray-400 hover:text-white bg-white/5 border border-transparent">
+                <i class="fa-solid fa-crown mr-1.5"></i> <span data-i18n="tab_synthesis">Synthèse Impériale</span>
+            </button>
+        </div>
+    </div>
+
+    <main class="flex-grow z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Zone d'entrée de profil -->
+        <section class="bg-cosmic-card/60 border border-white/5 rounded-3xl p-6 mb-8 cosmic-shadow relative overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                <div class="lg:col-span-4 space-y-2">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-cosmic-gold/10 border border-cosmic-gold/20 text-cosmic-gold text-[10px] font-medium uppercase tracking-wider">
+                        <i class="fa-solid fa-circle-nodes"></i> <span data-i18n="input_badge">Calculs Géocentriques</span>
+                    </span>
+                    <h2 class="font-serif text-3xl text-white font-bold" data-i18n="input_title">Vos Coordonnées</h2>
+                    <p class="text-xs text-gray-400" data-i18n="input_subtitle">Insérez vos coordonnées de naissance pour déclencher les moteurs analytiques.</p>
+                </div>
+                
+                <div class="lg:col-span-8">
+                    <form id="astro-core-form" onsubmit="computeAnalyticalModel(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+                        <div>
+                            <label class="block text-[10px] text-gray-400 mb-1 uppercase font-semibold" data-i18n="label_name">Prénom</label>
+                            <input type="text" id="subject-name" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-cosmic-gold text-xs transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-400 mb-1 uppercase font-semibold" data-i18n="label_date">Date exacte</label>
+                            <input type="date" id="subject-date" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-cosmic-gold text-xs transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-400 mb-1 uppercase font-semibold" data-i18n="label_time">Heure (Locale)</label>
+                            <input type="time" id="subject-time" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-cosmic-gold text-xs transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-400 mb-1 uppercase font-semibold" data-i18n="label_place">Lieu de Référence</label>
+                            <input type="text" id="subject-place" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-cosmic-gold text-xs transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-400 mb-1 uppercase font-semibold" data-i18n="label_gender">Sexe</label>
+                            <select id="subject-gender" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-cosmic-gold text-xs transition-all">
+                                <option value="F" class="bg-cosmic-space" data-i18n="gender_f">Féminin</option>
+                                <option value="M" class="bg-cosmic-space" data-i18n="gender_m">Masculin</option>
+                            </select>
+                        </div>
+                    </form>
+                    <div class="flex justify-end mt-4">
+                        <button onclick="triggerEngineCalculation()" class="px-6 py-2.5 bg-gradient-to-r from-cosmic-gold to-cosmic-goldLight text-cosmic-void font-bold rounded-xl text-xs uppercase tracking-wider hover:opacity-90 transition-all shadow-md cursor-pointer">
+                            <span data-i18n="btn_calculate">Générer la Carte Impériale</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Écran de bienvenue par défaut -->
+        <div id="astro-placeholder-screen" class="bg-cosmic-card/30 border border-dashed border-white/10 rounded-3xl p-16 text-center flex flex-col items-center justify-center gap-4 min-h-[500px]">
+            <div class="w-20 h-20 rounded-full bg-cosmic-gold/5 border border-cosmic-gold/20 flex items-center justify-center text-cosmic-gold text-3xl animate-spin-slow">
+                <i class="fa-solid fa-dharmachakra"></i>
+            </div>
+            <h3 class="font-serif text-2xl text-white font-semibold" data-i18n="placeholder_title">Calculateur Astrologique d'Élite</h3>
+            <p class="text-gray-400 text-sm max-w-lg mx-auto leading-relaxed" data-i18n="placeholder_desc">
+                Veuillez configurer et soumettre vos coordonnées temporelles ci-dessus. Notre moteur exécutera l'intégralité des aspects célestes, calculera vos dominantes élémentaires et construira votre portrait psychologique.
+            </p>
+        </div>
+
+        <!-- Conteneur global de résultats -->
+        <div id="astro-analysis-workspace" class="hidden space-y-12">
+
+            <!-- ================= ONGLET 1 : PORTRAIT ET CARTE DU CIEL ================= -->
+            <div id="panel-portrait" class="app-panel space-y-8 animate-fade-in">
+                <!-- Top Row: Chart Wheel and Core Identity Details -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Carte Céleste en SVG Dynamique -->
+                    <div class="lg:col-span-6 bg-cosmic-card border border-white/5 rounded-3xl p-6 flex items-center justify-center shadow-inner relative overflow-hidden">
+                        <div class="absolute inset-0 pointer-events-none bg-gradient-to-tr from-cosmic-accent/5 to-transparent"></div>
+                        <div class="w-full max-w-md aspect-square">
+                            <svg id="cosmic-astral-wheel-svg" viewBox="0 0 500 500" class="w-full h-full">
+                                <!-- Tracé dynamique par le moteur JavaScript -->
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Métadonnées & Piliers Fondamentaux -->
+                    <div class="lg:col-span-6 space-y-6">
+                        <div class="space-y-1">
+                            <span class="text-[10px] text-cosmic-gold uppercase tracking-widest font-semibold" data-i18n="label_astral_id">Identité Céleste d'Origine</span>
+                            <h3 id="display-subject-name" class="font-serif text-4xl text-white font-bold">---</h3>
+                            <p id="display-subject-metadata" class="text-xs text-gray-400 font-mono">---</p>
+                        </div>
+                        
+                        <hr class="border-white/5">
+
+                        <!-- Les 4 Points Cardinaux (Calculés à orbe serré) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-1">
+                                <span class="text-[10px] text-cosmic-gold uppercase tracking-wider font-semibold block">★ <span data-i18n="pillar_sun">Soleil (Moi Profond)</span></span>
+                                <span id="out-sun-value" class="text-sm font-bold text-white block">---</span>
+                                <p class="text-[11px] text-gray-400" id="out-sun-house-desc">---</p>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-1">
+                                <span class="text-[10px] text-cosmic-gold uppercase tracking-wider font-semibold block">☽ <span data-i18n="pillar_moon">Lune (Inconscient)</span></span>
+                                <span id="out-moon-value" class="text-sm font-bold text-white block">---</span>
+                                <p class="text-[11px] text-gray-400" id="out-moon-house-desc">---</p>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-1">
+                                <span class="text-[10px] text-cosmic-accent uppercase tracking-wider font-semibold block">▲ <span data-i18n="pillar_asc">Ascendant (Comportement)</span></span>
+                                <span id="out-asc-value" class="text-sm font-bold text-white block">---</span>
+                                <p class="text-[11px] text-gray-400" id="out-asc-desc">---</p>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-1">
+                                <span class="text-[10px] text-cosmic-purple uppercase tracking-wider font-semibold block">▼ <span data-i18n="pillar_desc">Descendant (Relations)</span></span>
+                                <span id="out-desc-value" class="text-sm font-bold text-white block">---</span>
+                                <p class="text-[11px] text-gray-400" id="out-desc-desc">---</p>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-1">
+                                <span class="text-[10px] text-cosmic-cyan uppercase tracking-wider font-semibold block">◆ <span data-i18n="pillar_mc">Milieu du Ciel (Carrière)</span></span>
+                                <span id="out-mc-value" class="text-sm font-bold text-white block">---</span>
+                                <p class="text-[11px] text-gray-400" id="out-mc-desc">---</p>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-1">
+                                <span class="text-[10px] text-emerald-400 uppercase tracking-wider font-semibold block">✿ <span data-i18n="pillar_fc">Fond du Ciel (Racines)</span></span>
+                                <span id="out-fc-value" class="text-sm font-bold text-white block">---</span>
+                                <p class="text-[11px] text-gray-400" id="out-fc-desc">---</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portrait Psychologique Ultra-Détaillé -->
+                <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <h3 class="font-serif text-2xl text-white font-bold border-b border-white/5 pb-3">
+                        <i class="fa-solid fa-mask mr-2 text-cosmic-gold"></i> <span data-i18n="portrait_psychologique_title">Portrait Psychologique Majeur</span>
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed text-gray-300">
+                        <div class="space-y-4">
+                            <p id="out-portrait-conscient"><strong class="text-white block mb-1">Conscience Céleste (Moi conscient) :</strong> ---</p>
+                            <p id="out-portrait-inconscient"><strong class="text-white block mb-1">Mystère Céleste (Vie inconsciente) :</strong> ---</p>
+                            <p id="out-portrait-temperament"><strong class="text-white block mb-1">Structure Énergétique globale :</strong> ---</p>
+                            <p id="out-portrait-caractere"><strong class="text-white block mb-1">Caractérologie & Relations sociales :</strong> ---</p>
+                        </div>
+                        <div class="space-y-4 bg-white/5 p-5 rounded-2xl border border-white/5">
+                            <h4 class="font-serif text-lg text-white font-semibold mb-2" data-i18n="piliers_essentiels">Piliers Individuels</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <strong class="text-emerald-400 block text-xs uppercase tracking-wider"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="label_strengths">Forces</span></strong>
+                                    <p class="text-xs text-gray-400 mt-1" id="out-forces-list">---</p>
+                                </div>
+                                <div>
+                                    <strong class="text-red-400 block text-xs uppercase tracking-wider"><i class="fa-solid fa-triangle-exclamation"></i> <span data-i18n="label_weaknesses">Faiblesses</span></strong>
+                                    <p class="text-xs text-gray-400 mt-1" id="out-faiblesses-list">---</p>
+                                </div>
+                                <div>
+                                    <strong class="text-cosmic-gold block text-xs uppercase tracking-wider"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="label_talents">Talents</span></strong>
+                                    <p class="text-xs text-gray-400 mt-1" id="out-talents-list">---</p>
+                                </div>
+                                <div>
+                                    <strong class="text-cosmic-cyan block text-xs uppercase tracking-wider"><i class="fa-solid fa-bullseye"></i> <span data-i18n="label_challenges">Défis</span></strong>
+                                    <p class="text-xs text-gray-400 mt-1" id="out-defis-list">---</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Les 10 Planètes Décortiquées -->
+                <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <h3 class="font-serif text-2xl text-white font-bold border-b border-white/5 pb-3">
+                        <i class="fa-solid fa-globe mr-2 text-cosmic-gold"></i> <span data-i18n="planets_detail_title">Analyse Planétaire de Précision</span>
+                    </h3>
+                    <div id="planets-analytical-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Rempli en direct -->
+                    </div>
+                </div>
+
+                <!-- Les 12 Maisons de l'Existence -->
+                <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <h3 class="font-serif text-2xl text-white font-bold border-b border-white/5 pb-3">
+                        <i class="fa-solid fa-house-chimney mr-2 text-cosmic-gold"></i> <span data-i18n="houses_detail_title">Les 12 Portes de l'Existence (Maisons)</span>
+                    </h3>
+                    <div id="houses-analytical-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Rempli en direct -->
+                    </div>
+                </div>
+
+                <!-- Aspects planétaires calculés -->
+                <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <h3 class="font-serif text-2xl text-white font-bold border-b border-white/5 pb-3">
+                        <i class="fa-solid fa-circle-nodes mr-2 text-cosmic-gold"></i> <span data-i18n="aspects_detail_title">Le Dialogue des Planètes (Aspects Majeurs & Mineurs)</span>
+                    </h3>
+                    <div id="aspects-analytical-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Rempli en direct -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= ONGLET 2 : DOMINANTES & ÉLÉMENTS ================= -->
+            <div id="panel-elements" class="app-panel hidden space-y-8 animate-fade-in">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Graphique des Éléments (Feu, Terre, Air, Eau) -->
+                    <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 space-y-6">
+                        <h3 class="font-serif text-xl text-white font-bold" data-i18n="elements_title">Répartition Élémentaire</h3>
+                        <div class="space-y-4" id="elements-progress-bars">
+                            <!-- Rempli par le moteur -->
+                        </div>
+                        <div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-xs text-gray-300 leading-relaxed" id="elements-synthesis-text">
+                            <!-- Analyse des excès ou manques -->
+                        </div>
+                    </div>
+
+                    <!-- Tempéraments et Modes d'expression -->
+                    <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 space-y-6">
+                        <h3 class="font-serif text-xl text-white font-bold" data-i18n="temperaments_title">Tempéraments & Modes Dynamiques</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-2">
+                                <span class="text-[10px] text-cosmic-gold uppercase tracking-wider block font-bold" data-i18n="label_modes">Modes de Vie</span>
+                                <div class="space-y-1.5 text-xs">
+                                    <div class="flex justify-between"><span>Cardinal</span> <span id="val-mode-cardinal" class="font-bold">---</span></div>
+                                    <div class="flex justify-between"><span>Fixe</span> <span id="val-mode-fixed" class="font-bold">---</span></div>
+                                    <div class="flex justify-between"><span>Mutable</span> <span id="val-mode-mutable" class="font-bold">---</span></div>
+                                </div>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-2">
+                                <span class="text-[10px] text-cosmic-accent uppercase tracking-wider block font-bold" data-i18n="label_polarities">Polarités Majeures</span>
+                                <div class="space-y-1.5 text-xs">
+                                    <div class="flex justify-between"><span>Masculine (陽)</span> <span id="val-pol-masc" class="font-bold">---</span></div>
+                                    <div class="flex justify-between"><span>Féminine (陰)</span> <span id="val-pol-fem" class="font-bold">---</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-xs text-gray-300 leading-relaxed" id="temperaments-synthesis-text">
+                            <!-- Analyse du tempérament colérique, sanguin, mélancolique, flegmatique -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Les Dominantes du Thème -->
+                <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <h3 class="font-serif text-xl text-white font-bold" data-i18n="dominants_system_title">Calculateurs des Dominantes Royales</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5 text-center space-y-1">
+                            <span class="text-[10px] text-cosmic-gold uppercase tracking-wider font-semibold block" data-i18n="dom_planet">Planète Dominante</span>
+                            <span id="dom-planet-value" class="text-lg font-bold text-white block">---</span>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5 text-center space-y-1">
+                            <span class="text-[10px] text-cosmic-accent uppercase tracking-wider font-semibold block" data-i18n="dom_house">Maison Dominante</span>
+                            <span id="dom-house-value" class="text-lg font-bold text-white block">---</span>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5 text-center space-y-1">
+                            <span class="text-[10px] text-cosmic-purple uppercase tracking-wider font-semibold block" data-i18n="strongest_planet">Planète la plus Forte</span>
+                            <span id="strongest-planet-value" class="text-lg font-bold text-white block">---</span>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5 text-center space-y-1">
+                            <span class="text-[10px] text-cosmic-cyan uppercase tracking-wider font-semibold block" data-i18n="weakest_planet">Planète la plus Faible</span>
+                            <span id="weakest-planet-value" class="text-lg font-bold text-white block">---</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= ONGLET 3 : SYNASTRIE ET COMPATIBILITÉ ================= -->
+            <div id="panel-synastrie" class="app-panel hidden space-y-8 animate-fade-in">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Formulaire d'entrée de la deuxième personne -->
+                    <div class="lg:col-span-4 bg-cosmic-card border border-white/5 rounded-3xl p-6 space-y-6">
+                        <div class="space-y-2">
+                            <h3 class="font-serif text-xl text-white font-bold" data-i18n="syn_form_title">Partenaire (Profil B)</h3>
+                            <p class="text-xs text-gray-400" data-i18n="syn_form_desc">Saisissez les coordonnées de la personne à comparer pour calculer l'indice de synastrie globale.</p>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1 uppercase font-semibold">Prénom Partenaire</label>
+                                <input type="text" id="partner-name" value="Alex" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-cosmic-gold text-xs transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1 uppercase font-semibold">Date de Naissance</label>
+                                <input type="date" id="partner-date" value="1998-11-12" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-cosmic-gold text-xs transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1 uppercase font-semibold">Heure</label>
+                                <input type="time" id="partner-time" value="22:15" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-cosmic-gold text-xs transition-all">
+                            </div>
+                            <button onclick="computeSynastryChart()" class="w-full py-3 bg-gradient-to-r from-cosmic-gold to-cosmic-goldLight text-cosmic-void font-bold text-xs uppercase tracking-wider rounded-xl shadow-md cursor-pointer hover:opacity-90 transition-all">
+                                <span data-i18n="btn_calc_synastry">Calculer la Compatibilité</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Graphique radar et scores finaux de compatibilité -->
+                    <div class="lg:col-span-8 bg-cosmic-card border border-white/5 rounded-3xl p-6 sm:p-8 space-y-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <div class="space-y-1">
+                                <h3 class="font-serif text-2xl text-white font-bold" data-i18n="syn_res_title">Analyse Spatiale des Harmonies</h3>
+                                <p class="text-xs text-gray-400" id="syn-sub-title">---</p>
+                            </div>
+                            <!-- Score Général géant -->
+                            <div class="bg-cosmic-gold/10 border border-cosmic-gold/30 rounded-full w-24 h-24 flex flex-col items-center justify-center">
+                                <span class="text-xs text-cosmic-gold uppercase font-bold">Indice</span>
+                                <span id="synastry-global-score" class="text-3xl font-serif font-bold text-white">--</span>
+                            </div>
+                        </div>
+
+                        <!-- Graphique radar SVG -->
+                        <div class="flex justify-center">
+                            <svg id="synastry-radar-svg" viewBox="0 0 300 300" class="w-full max-w-xs">
+                                <!-- Tracé dynamique par le JS -->
+                            </svg>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="synastry-scores-list">
+                            <!-- Affichage détaillé des notes sectorielles -->
+                        </div>
+
+                        <div class="p-5 bg-white/5 rounded-2xl border border-white/5 text-xs text-gray-300 leading-relaxed space-y-2">
+                            <h4 class="font-serif text-white font-bold" data-i18n="synastry_verdict_title">Verdict Spirituel & Conseil d'Évolution</h4>
+                            <p id="synastry-verdict-desc">---</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= ONGLET 4 : CYCLES & PRÉVISIONS ================= -->
+            <div id="panel-predictions" class="app-panel hidden space-y-8 animate-fade-in">
+                <!-- Les Prévisions Temporelles (Aujourd'hui, Demain, Année...) -->
+                <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <h3 class="font-serif text-2xl text-white font-bold border-b border-white/5 pb-3">
+                        <i class="fa-solid fa-cloud-moon mr-2 text-cosmic-gold"></i> <span data-i18n="predictions_title">Météorologie Céleste & Transits</span>
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-1">
+                            <span class="text-[10px] text-cosmic-gold uppercase tracking-wider font-semibold block" data-i18n="prev_today">Aujourd'hui</span>
+                            <p class="text-xs text-gray-300" id="prev-today-text">---</p>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-1">
+                            <span class="text-[10px] text-cosmic-gold uppercase tracking-wider font-semibold block" data-i18n="prev_tomorrow">Demain</span>
+                            <p class="text-xs text-gray-300" id="prev-tomorrow-text">---</p>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-1">
+                            <span class="text-[10px] text-cosmic-gold uppercase tracking-wider font-semibold block" data-i18n="prev_month">Ce Mois-ci</span>
+                            <p class="text-xs text-gray-300" id="prev-month-text">---</p>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-1">
+                            <span class="text-[10px] text-cosmic-gold uppercase tracking-wider font-semibold block" data-i18n="prev_year">Cette Année</span>
+                            <p class="text-xs text-gray-300" id="prev-year-text">---</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Les Rétrogrades & Éclipses programmées -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 space-y-4">
+                        <h4 class="font-serif text-lg text-white font-bold border-b border-white/5 pb-2">
+                            <i class="fa-solid fa-rotate-left mr-2 text-cosmic-cyan"></i> <span data-i18n="retrogrades_title">Rétrogrades Planétaires Actuelles</span>
+                        </h4>
+                        <div class="space-y-2 text-xs text-gray-300" id="retrogrades-list">
+                            <!-- Rempli par le moteur -->
+                        </div>
+                    </div>
+
+                    <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 space-y-4">
+                        <h4 class="font-serif text-lg text-white font-bold border-b border-white/5 pb-2">
+                            <i class="fa-solid fa-moon mr-2 text-cosmic-purple"></i> <span data-i18n="eclipses_title">Saison des Éclipses & Lunaisons</span>
+                        </h4>
+                        <div class="space-y-2 text-xs text-gray-300" id="eclipses-list">
+                            <!-- Rempli par le moteur -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Opportunités et Risques des cycles de la vie -->
+                <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <h3 class="font-serif text-xl text-white font-bold border-b border-white/5 pb-2" data-i18n="life_cycles_title">Grands Cycles Trans-Saturniens de votre Âge</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6" id="cycles-life-container">
+                        <!-- Rempli par le moteur -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= ONGLET 5 : SYNTHÈSE IMPÉRIALE ================= -->
+            <div id="panel-synthese" class="app-panel hidden space-y-8 animate-fade-in">
+                <!-- Titre & Entête de Synthèse -->
+                <div class="text-center max-w-3xl mx-auto space-y-4 py-6">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cosmic-gold/10 border border-cosmic-gold/20 text-cosmic-gold text-xs font-semibold">
+                        <i class="fa-solid fa-scroll"></i> <span data-i18n="synthesis_badge">LIVRET DU DESTIN</span>
+                    </span>
+                    <h2 class="font-serif text-4xl text-white leading-tight font-bold" data-i18n="synthesis_main_title">Votre Manuel de Vie Céleste</h2>
+                    <p class="text-gray-400 text-sm" data-i18n="synthesis_desc">
+                        Ce manuel regroupe l'ensemble des synthèses d'interprétation pour votre existence, triées par secteurs de vie. Ce document est entièrement autonome et peut être sauvegardé.
+                    </p>
+                </div>
+
+                <!-- Plan d'Action & Synthèse par Domaines -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Vie Affective & Relations -->
+                    <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 space-y-4">
+                        <h4 class="font-serif text-lg text-white font-bold border-b border-white/5 pb-2">
+                            <i class="fa-solid fa-heart mr-2 text-red-400"></i> <span data-i18n="synth_love_title">Vie Affective & Âme Soeur</span>
+                        </h4>
+                        <p class="text-xs text-gray-300 leading-relaxed" id="synth-love-desc">---</p>
+                    </div>
+
+                    <!-- Carrière & Vocation -->
+                    <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 space-y-4">
+                        <h4 class="font-serif text-lg text-white font-bold border-b border-white/5 pb-2">
+                            <i class="fa-solid fa-briefcase mr-2 text-amber-400"></i> <span data-i18n="synth_career_title">Réussite Professionnelle & Vocation</span>
+                        </h4>
+                        <p class="text-xs text-gray-300 leading-relaxed" id="synth-career-desc">---</p>
+                    </div>
+
+                    <!-- Famille & Racines -->
+                    <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 space-y-4">
+                        <h4 class="font-serif text-lg text-white font-bold border-b border-white/5 pb-2">
+                            <i class="fa-solid fa-house-user mr-2 text-emerald-400"></i> <span data-i18n="synth_family_title">Famille & Héritage Inconscient</span>
+                        </h4>
+                        <p class="text-xs text-gray-300 leading-relaxed" id="synth-family-desc">---</p>
+                    </div>
+
+                    <!-- Finances & Argent -->
+                    <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 space-y-4">
+                        <h4 class="font-serif text-lg text-white font-bold border-b border-white/5 pb-2">
+                            <i class="fa-solid fa-coins mr-2 text-cosmic-gold"></i> <span data-i18n="synth_money_title">Rapport à la Richesse & Opportunités</span>
+                        </h4>
+                        <p class="text-xs text-gray-300 leading-relaxed" id="synth-money-desc">---</p>
+                    </div>
+
+                    <!-- Bien-être, Sommeil et Vitalité -->
+                    <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 space-y-4">
+                        <h4 class="font-serif text-lg text-white font-bold border-b border-white/5 pb-2">
+                            <i class="fa-solid fa-notes-medical mr-2 text-cosmic-cyan"></i> <span data-i18n="synth_health_title">Hygiène de Vie & Vitalité</span>
+                        </h4>
+                        <p class="text-xs text-gray-300 leading-relaxed" id="synth-health-desc">---</p>
+                        <div class="p-3 bg-white/5 rounded-xl border border-white/5 text-[10px] text-gray-400 leading-snug">
+                            <strong>Note de déni légal :</strong> Ces informations sont données uniquement à titre de divertissement et d'aide au développement personnel. Elles ne constituent en aucun cas un avis médical.
+                        </div>
+                    </div>
+
+                    <!-- Développement Spirituel -->
+                    <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 space-y-4">
+                        <h4 class="font-serif text-lg text-white font-bold border-b border-white/5 pb-2">
+                            <i class="fa-solid fa-compass mr-2 text-cosmic-purple"></i> <span data-i18n="synth_spirit_title">Mission d'Âme & Croissance Spirituelle</span>
+                        </h4>
+                        <p class="text-xs text-gray-300 leading-relaxed" id="synth-spirit-desc">---</p>
+                    </div>
+                </div>
+
+                <!-- Recommandations, Couleurs, Cristaux, Chiffres et Animaux Symboliques -->
+                <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <h3 class="font-serif text-xl text-white font-bold" data-i18n="recos_title">Correspondances Célestes Personnalisées</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/5">
+                            <span class="text-[9px] text-cosmic-gold uppercase block font-semibold" data-i18n="reco_stone">Pierre sacrée</span>
+                            <span id="reco-stone" class="font-bold text-white text-sm block mt-1">---</span>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/5">
+                            <span class="text-[9px] text-cosmic-gold uppercase block font-semibold" data-i18n="reco_color">Couleur</span>
+                            <span id="reco-color" class="font-bold text-white text-sm block mt-1">---</span>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/5">
+                            <span class="text-[9px] text-cosmic-gold uppercase block font-semibold" data-i18n="reco_animal">Animal fétiche</span>
+                            <span id="reco-animal" class="font-bold text-white text-sm block mt-1">---</span>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl border border-white/5">
+                            <span class="text-[9px] text-cosmic-gold uppercase block font-semibold" data-i18n="reco_number">Chiffres fétiches</span>
+                            <span id="reco-number" class="font-bold text-white text-sm block mt-1">---</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Célébrités partageant la même structure vibratoire -->
+                <div class="bg-cosmic-card border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <h3 class="font-serif text-xl text-white font-bold border-b border-white/5 pb-2">
+                        <i class="fa-solid fa-masks-theater mr-2 text-cosmic-gold"></i> <span data-i18n="celebs_title">Miroirs Historiques (Célébrités Apparentées)</span>
+                    </h3>
+                    <p class="text-xs text-gray-300" id="celebs-list-text">---</p>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Pied de page de l'application -->
+    <footer class="mt-12 bg-cosmic-space border-t border-white/5 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+            <p class="text-xs text-gray-500 leading-relaxed max-w-2xl mx-auto">
+                L'application calcule les positions cosmiques à l'aide d'algorithmes mathématiques d'orbe strict conformes aux règles de l'écliptique géocentrique. Les prévisions et rapports sont rédigés exclusivement à des fins de divertissement et de développement personnel.
+            </p>
+            <p class="text-[10px] text-gray-600">
+                &copy; 2026 Astrologie APP Mada - Édition Impériale. Tous droits réservés.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Systèmes de stockage et paramètres par défaut
+        let currentLanguage = 'fr';
+        let systemTheme = 'dark';
+        let currentProfile = null;
+
+        // --- DICTIONNAIRE MULTILINGUE FR / MG ---
+        const TRANSLATIONS = {
+            fr: {
+                tab_portrait: "Portrait Natal & Ciel",
+                tab_dominants: "Dominantes & Éléments",
+                tab_synastry: "Synastrie & Compatibilité",
+                tab_forecasts: "Cycles & Prévisions",
+                tab_synthesis: "Synthèse Impériale",
+                input_badge: "Calculs Géocentriques",
+                input_title: "Vos Coordonnées",
+                input_subtitle: "Insérez vos coordonnées de naissance pour déclencher les moteurs analytiques.",
+                label_name: "Prénom",
+                label_date: "Date exacte",
+                label_time: "Heure (Locale)",
+                label_place: "Lieu de Référence",
+                label_gender: "Sexe",
+                gender_f: "Féminin",
+                gender_m: "Masculin",
+                btn_calculate: "Générer la Carte Impériale",
+                placeholder_title: "Calculateur Astrologique d'Élite",
+                placeholder_desc: "Veuillez configurer et soumettre vos coordonnées temporelles ci-dessus. Notre moteur exécutera l'intégralité des aspects célestes, calculera vos dominantes élémentaires et construira votre portrait psychologique.",
+                label_astral_id: "Identité Céleste d'Origine",
+                pillar_sun: "Soleil (Moi Profond)",
+                pillar_moon: "Lune (Inconscient)",
+                pillar_asc: "Ascendant (Comportement)",
+                pillar_desc: "Descendant (Relations)",
+                pillar_mc: "Milieu du Ciel (Carrière)",
+                pillar_fc: "Fond du Ciel (Racines)",
+                portrait_psychologique_title: "Portrait Psychologique Majeur",
+                piliers_essentiels: "Piliers Individuels",
+                label_strengths: "Forces",
+                label_weaknesses: "Faiblesses",
+                label_talents: "Talents",
+                label_challenges: "Défis",
+                planets_detail_title: "Analyse Planétaire de Précision",
+                houses_detail_title: "Les 12 Portes de l'Existence (Maisons)",
+                aspects_detail_title: "Le Dialogue des Planètes (Aspects Majeurs & Mineurs)",
+                elements_title: "Répartition Élémentaire",
+                temperaments_title: "Tempéraments & Modes Dynamiques",
+                label_modes: "Modes de Vie",
+                label_polarities: "Polarités Majeures",
+                dominants_system_title: "Calculateurs des Dominantes Royales",
+                dom_planet: "Planète Dominante",
+                dom_house: "Maison Dominante",
+                strongest_planet: "Planète la plus Forte",
+                weakest_planet: "Planète la plus Faible",
+                syn_form_title: "Partenaire (Profil B)",
+                syn_form_desc: "Saisissez les coordonnées de la personne à comparer pour calculer l'indice de synastrie globale.",
+                btn_calc_synastry: "Calculer la Compatibilité",
+                syn_res_title: "Analyse Spatiale des Harmonies",
+                synastry_verdict_title: "Verdict Spirituel & Conseil d'Évolution",
+                predictions_title: "Météorologie Céleste & Transits",
+                prev_today: "Aujourd'hui",
+                prev_tomorrow: "Demain",
+                prev_month: "Ce Mois-ci",
+                prev_year: "Cette Année",
+                retrogrades_title: "Rétrogrades Planétaires Actuelles",
+                eclipses_title: "Saison des Éclipses & Lunaisons",
+                life_cycles_title: "Grands Cycles Trans-Saturniens de votre Âge",
+                synthesis_badge: "LIVRET DU DESTIN",
+                synthesis_main_title: "Votre Manuel de Vie Céleste",
+                synthesis_desc: "Ce manuel regroupe l'ensemble des synthèses d'interprétation pour votre existence, triées par secteurs de vie.",
+                synth_love_title: "Vie Affective & Âme Soeur",
+                synth_career_title: "Réussite Professionnelle & Vocation",
+                synth_family_title: "Famille & Héritage Inconscient",
+                synth_money_title: "Rapport à la Richesse & Opportunités",
+                synth_health_title: "Hygiène de Vie & Vitalité",
+                synth_spirit_title: "Mission d'Âme & Croissance Spirituelle",
+                recos_title: "Correspondances Célestes Personnalisées",
+                reco_stone: "Pierre sacrée",
+                reco_color: "Couleur",
+                reco_animal: "Animal fétiche",
+                reco_number: "Chiffres fétiches",
+                celebs_title: "Miroirs Historiques (Célébrités Apparentées)"
+            },
+            mg: {
+                tab_portrait: "Sary Tanteraka & Lanitra",
+                tab_dominants: "Hery Ambony & Singa",
+                tab_synastry: "Fifandraisana & Loko",
+                tab_forecasts: "Tsingerina & Vinany",
+                tab_synthesis: "Famintinana Fenony",
+                input_badge: "Fandinihana Ara-Kintana",
+                input_title: "Ny Mombamomba Anao",
+                input_subtitle: "Ampidiro ny fotoana sy ny daty nahaterahanao mba handefasana ny milina famakafakana.",
+                label_name: "Anarana",
+                label_date: "Daty marina",
+                label_time: "Ora (An-toerana)",
+                label_place: "Toerana nihaviana",
+                label_gender: "Lahy/Vavy",
+                gender_f: "Vehivavy",
+                gender_m: "Lehilahy",
+                btn_calculate: "Kajio ny Sary Masina",
+                placeholder_title: "Fitaovana Famakafakana ny Kintana",
+                placeholder_desc: "Fenoy ny mombamomba anao etsy ambony. Ny fitaovana dia hikajy ny fifandraisan'ny planeta rehetra, ny herin'ny singa fototra, ary ny toetranao.",
+                label_astral_id: "Toetra Selestialy tamin'ny Fahaterahana",
+                pillar_sun: "Masoandro (Ny Tena Marina)",
+                pillar_moon: "Volana (Saina Lalina)",
+                pillar_asc: "Ascendant (Fisehoana)",
+                pillar_desc: "Descendant (Fifandraisana)",
+                pillar_mc: "Milieu du Ciel (Asa & Lahatra)",
+                pillar_fc: "Fond du Ciel (Fototra)",
+                portrait_psychologique_title: "Famakafakana ny Toetra Fototra",
+                piliers_essentiels: "Ireo Andrin-toetra",
+                label_strengths: "Hery",
+                label_weaknesses: "Fahalemena",
+                label_talents: "Talenta",
+                label_challenges: "Sakan-dalana",
+                planets_detail_title: "Fandinihana Lalina ny Planeta rehetra",
+                houses_detail_title: "Ireo Trano 12 amin'ny Fiainana",
+                aspects_detail_title: "Fifanakalozan-kevitry ny Planeta (Aspects)",
+                elements_title: "Ny Singa Fototra 4",
+                temperaments_title: "Gadona & Toetra Ankapobeny",
+                label_modes: "Fomba Fiainana",
+                label_polarities: "Hery Yin & Yang",
+                dominants_system_title: "Ireo Hery Mpanjaka amin'ny Sary",
+                dom_planet: "Planeta Mpanjaka",
+                dom_house: "Trano Mpanjaka",
+                strongest_planet: "Planeta Mahery Indrindra",
+                weakest_planet: "Planeta Malemy Indrindra",
+                syn_form_title: "Mombamomba ny Olona Faharoa (B)",
+                syn_form_desc: "Ampidiro ny daty sy ora nahaterahan'ilay olona fampitoviana mba hahazoana ny taha.",
+                btn_calc_synastry: "Kajio ny Fifanarahana",
+                syn_res_title: "Fandinihana ny Fifandraisan'ny Roa",
+                synastry_verdict_title: "Teny Tsara ho an'ny Fifandraisana",
+                predictions_title: "Toetr'andro Selestialy & Tsingerina",
+                prev_today: "Androany",
+                prev_tomorrow: "Rahampitso",
+                prev_month: "Amin'ity Volana ity",
+                prev_year: "Amin'ity Taona ity",
+                retrogrades_title: "Planeta Mihemotra Ankehitriny (Retrogrades)",
+                eclipses_title: "Tsinam-bolana & Fenomanana",
+                life_cycles_title: "Ireo Tsingerina Lehibe amin'ny Taonanao",
+                synthesis_badge: "BOKIN'NY LAHATRA",
+                synthesis_main_title: "Bokin'ny Fiainanao Selestialy",
+                synthesis_desc: "Ity boky ity dia manangona ny torohevitra sy famakafakana rehetra momba ny fiainanao amin'ny ankapobeny.",
+                synth_love_title: "Ny Fitiavana & Fiainana Ara-panahy",
+                synth_career_title: "Fahombiazana amin'ny Asa",
+                synth_family_title: "Ny Fianakaviana & Ny Lova",
+                synth_money_title: "Ny Harena & Ny Vola",
+                synth_health_title: "Ny Fahasalamana & Hery",
+                synth_spirit_title: "Ny Lalan'ny Fanahy & Fivoarana",
+                recos_title: "Fifandraisana Masina amin'ny Fiainana",
+                reco_stone: "Vato Masina",
+                reco_color: "Loko Tsara",
+                reco_animal: "Biby fanehoana",
+                reco_number: "Isa vintana",
+                celebs_title: "Olon-malaza mitovy Vintana aminao"
+            }
+        };
+
+        // --- DONNÉES TECHNIQUES COMPLÈTES DES MAISONS ET SIGNES ---
+        const ASTRAL_SIGNS_DATA = {
+            fr: [
+                { name: "Capricorne", traditional: "Adijady", icon: "♑", element: "Terre", mode: "Cardinal", polarity: "Féminine", ruling: "Saturne", stone: "Obsidienne", color: "Noir profond", animal: "Chèvre des montagnes", numbers: "8, 13", decans: ["Saturne", "Vénus", "Mercure"] },
+                { name: "Verseau", traditional: "Adalo", icon: "♒", element: "Air", mode: "Fixe", polarity: "Masculine", ruling: "Uranus", stone: "Améthyste", color: "Bleu électrique", animal: "Aigle", numbers: "4, 22", decans: ["Uranus", "Mercure", "Vénus"] },
+                { name: "Poissons", traditional: "Alohotsy", icon: "♓", element: "Eau", mode: "Mutable", polarity: "Féminine", ruling: "Neptune", stone: "Aigue-marine", color: "Vert lagon", animal: "Dauphin", numbers: "7, 9", decans: ["Neptune", "Lune", "Pluton"] },
+                { name: "Bélier", traditional: "Alahamady", icon: "♈", element: "Feu", mode: "Cardinal", polarity: "Masculine", ruling: "Mars", stone: "Jaspe rouge", color: "Rouge pourpre", animal: "Bélier", numbers: "1, 9", decans: ["Mars", "Soleil", "Jupiter"] },
+                { name: "Taureau", traditional: "Adaoro", icon: "♉", element: "Terre", mode: "Fixe", polarity: "Féminine", ruling: "Vénus", stone: "Émeraude", color: "Vert sapin", animal: "Taureau sauvage", numbers: "2, 6", decans: ["Vénus", "Mercure", "Saturne"] },
+                { name: "Gémeaux", traditional: "Adizaoza", icon: "♊", element: "Air", mode: "Mutable", polarity: "Masculine", ruling: "Mercure", stone: "Œil de tigre", color: "Jaune vif", animal: "Renard", numbers: "5, 14", decans: ["Mercure", "Vénus", "Uranus"] },
+                { name: "Cancer", traditional: "Asorotany", icon: "♋", element: "Eau", mode: "Cardinal", polarity: "Féminine", ruling: "Lune", stone: "Pierre de lune", color: "Blanc nacré", animal: "Crabe", numbers: "2, 7", decans: ["Lune", "Pluton", "Neptune"] },
+                { name: "Lion", traditional: "Alahasaty", icon: "♌", element: "Feu", mode: "Fixe", polarity: "Masculine", ruling: "Soleil", stone: "Citrine", color: "Or étincelant", animal: "Lion de savane", numbers: "1, 5", decans: ["Soleil", "Jupiter", "Mars"] },
+                { name: "Vierge", traditional: "Asambola", icon: "♍", element: "Terre", mode: "Mutable", polarity: "Féminine", ruling: "Mercure", stone: "Saphir", color: "Gris souris", animal: "Abeille", numbers: "3, 5", decans: ["Mercure", "Saturne", "Vénus"] },
+                { name: "Balance", traditional: "Adimizana", icon: "♎", element: "Air", mode: "Cardinal", polarity: "Masculine", ruling: "Vénus", stone: "Jade", color: "Rose pastel", animal: "Cygne", numbers: "6, 9", decans: ["Vénus", "Uranus", "Mercure"] },
+                { name: "Scorpion", traditional: "Alakarabo", icon: "♏", element: "Eau", mode: "Fixe", polarity: "Féminine", ruling: "Pluton", stone: "Malachite", color: "Noir & Rouge", animal: "Scorpion", numbers: "8, 11", decans: ["Pluton", "Neptune", "Lune"] },
+                { name: "Sagittaire", traditional: "Alakaosy", icon: "♐", element: "Feu", mode: "Mutable", polarity: "Masculine", ruling: "Jupiter", stone: "Turquoise", color: "Bleu nuit", animal: "Cheval", numbers: "3, 12", decans: ["Jupiter", "Mars", "Soleil"] }
+            ],
+            mg: [
+                { name: "Capricorne", traditional: "Adijady", icon: "♑", element: "Terre", mode: "Cardinal", polarity: "Féminine", ruling: "Saturne", stone: "Obsidienne", color: "Noir profond", animal: "Chèvre des montagnes", numbers: "8, 13", decans: ["Saturne", "Vénus", "Mercure"] },
+                { name: "Verseau", traditional: "Adalo", icon: "♒", element: "Air", mode: "Fixe", polarity: "Masculine", ruling: "Uranus", stone: "Améthyste", color: "Bleu électrique", animal: "Aigle", numbers: "4, 22", decans: ["Uranus", "Mercure", "Vénus"] },
+                { name: "Poissons", traditional: "Alohotsy", icon: "♓", element: "Eau", mode: "Mutable", polarity: "Féminine", ruling: "Neptune", stone: "Aigue-marine", color: "Vert lagon", animal: "Dauphin", numbers: "7, 9", decans: ["Neptune", "Lune", "Pluton"] },
+                { name: "Bélier", traditional: "Alahamady", icon: "♈", element: "Feu", mode: "Cardinal", polarity: "Masculine", ruling: "Mars", stone: "Jaspe rouge", color: "Rouge pourpre", animal: "Bélier", numbers: "1, 9", decans: ["Mars", "Soleil", "Jupiter"] },
+                { name: "Taureau", traditional: "Adaoro", icon: "♉", element: "Terre", mode: "Fixe", polarity: "Féminine", ruling: "Vénus", stone: "Émeraude", color: "Vert sapin", animal: "Taureau sauvage", numbers: "2, 6", decans: ["Vénus", "Mercure", "Saturne"] },
+                { name: "Gémeaux", traditional: "Adizaoza", icon: "♊", element: "Air", mode: "Mutable", polarity: "Masculine", ruling: "Mercure", stone: "Œil de tigre", color: "Jaune vif", animal: "Renard", numbers: "5, 14", decans: ["Mercure", "Vénus", "Uranus"] },
+                { name: "Cancer", traditional: "Asorotany", icon: "♋", element: "Eau", mode: "Cardinal", polarity: "Féminine", ruling: "Lune", stone: "Pierre de lune", color: "Blanc nacré", animal: "Crabe", numbers: "2, 7", decans: ["Lune", "Pluton", "Neptune"] },
+                { name: "Lion", traditional: "Alahasaty", icon: "♌", element: "Feu", mode: "Fixe", polarity: "Masculine", ruling: "Soleil", stone: "Citrine", color: "Or étincelant", animal: "Lion de savane", numbers: "1, 5", decans: ["Soleil", "Jupiter", "Mars"] },
+                { name: "Vierge", traditional: "Asambola", icon: "♍", element: "Terre", mode: "Mutable", polarity: "Féminine", ruling: "Mercure", stone: "Saphir", color: "Gris souris", animal: "Abeille", numbers: "3, 5", decans: ["Mercure", "Saturne", "Vénus"] },
+                { name: "Balance", traditional: "Adimizana", icon: "♎", element: "Air", mode: "Cardinal", polarity: "Masculine", ruling: "Vénus", stone: "Jade", color: "Rose pastel", animal: "Cygne", numbers: "6, 9", decans: ["Vénus", "Uranus", "Mercure"] },
+                { name: "Scorpion", traditional: "Alakarabo", icon: "♏", element: "Eau", mode: "Fixe", polarity: "Féminine", ruling: "Pluton", stone: "Malachite", color: "Noir & Rouge", animal: "Scorpion", numbers: "8, 11", decans: ["Pluton", "Neptune", "Lune"] },
+                { name: "Sagittaire", traditional: "Alakaosy", icon: "♐", element: "Feu", mode: "Mutable", polarity: "Masculine", ruling: "Jupiter", stone: "Turquoise", color: "Bleu nuit", animal: "Cheval", numbers: "3, 12", decans: ["Jupiter", "Mars", "Soleil"] }
+            ]
+        };
+
+        const HOUSES_DATA = {
+            fr: [
+                { id: "Maison I", title: "Ascendant", domain: "L'identité, le corps physique, l'apparence et le premier filtre comportemental d'intégration terrestre.", potential: "Une grande capacité à initier et à se projeter face au monde extérieur.", blocks: "Tendance à l'égoïsme ou au manque de perspective sur autrui.", advice: "Développez une écoute active sans étouffer votre spontanéité d'affirmation." },
+                { id: "Maison II", title: "Possessions", domain: "Les finances, le sens des valeurs morales et matérielles, la sécurité physique et les dons innés.", potential: "Aisance à matérialiser ses désirs et à s'ancrer solidement.", blocks: "Peur panique de manquer ou possessivité affective nocive.", advice: "Donnez sans attente pour libérer la circulation de l'abondance dans votre vie." },
+                { id: "Maison III", title: "Entourage Proche", domain: "La communication verbale, la fratrie, l'apprentissage scolaire primaire et les courts déplacements.", potential: "Agilité d'esprit, curiosité et facilité d'expression spontanée.", blocks: "Dispersion intellectuelle ou bavardage stérile.", advice: "Structurez vos idées par l'écrit pour éviter de vous disperser." },
+                { id: "Maison IV", title: "Fond du Ciel", domain: "Le foyer, les racines ancestrales, l'enfance, le père et le sanctuaire privé de la maturité.", potential: "Profondeur spirituelle ancrée dans un héritage émotionnel solide.", blocks: "Nostalgie maladive du passé ou mémoires familiales pesantes.", advice: "Pardonnez pour libérer le socle constructif de votre être intérieur." },
+                { id: "Maison V", title: "Créativité & Amours", domain: "La création artistique, les amours romantiques, les plaisirs, la spéculation et l'éducation des enfants.", potential: "Rayonnement joyeux, charisme naturel et force d'expression créatrice.", blocks: "Besoin excessif d'être admiré, vanité ou superficialité.", advice: "Créez d'abord pour le plaisir d'offrir plutôt que pour la reconnaissance." },
+                { id: "Maison VI", title: "Travail Quotidien", domain: "Le cadre professionnel quotidien, la santé du corps, le sens du service utile et la gestion de routine.", potential: "Rigueur analytique hors pair, efficacité et dévouement honorable.", blocks: "Anxiété maladive, somatisation ou perfectionnisme bloquant.", advice: "Sachez déléguer et écouter les signaux de fatigue de votre corps." },
+                { id: "Maison VII", title: "Descendant", domain: "Le mariage légal, les contrats formels, les partenariats de vie et les ennemis déclarés.", potential: "Capacité innée à harmoniser les contraires et à s'associer.", blocks: "Dépendance affective ou conflits récurrents d'ego.", advice: "Trouvez d'abord votre propre équilibre intérieur pour ne plus l'exiger d'autrui." },
+                { id: "Maison VIII", title: "Métamorphose", domain: "Les crises salutaires, la sexualité sacrée, l'argent d'autrui (héritages) et la régénération mystique.", potential: "Force de résilience indestructible et magnétisme spirituel profond.", blocks: "Rancœur toxique, jalousie dévorante ou peur de la mort.", advice: "Lâchez prise sur ce que vous ne pouvez contrôler pour renaître." },
+                { id: "Maison IX", title: "Haute Philosophie", domain: "Les grands voyages physiques, l'érudition supérieure, l'éthique spirituelle et la quête de sens.", potential: "Optimisme d'action, tolérance universelle et foi dans l'avenir.", blocks: "Fanatisme intellectuel, dogmatisme ou fuite de la réalité.", advice: "Incarnez votre philosophie au quotidien plutôt que d'en faire un dogme abstrait." },
+                { id: "Maison X", title: "Milieu du Ciel", domain: "La destinée sociale suprême, l'accomplissement professionnel public, l'autorité naturelle et l'image d'autorité.", potential: "Leadership inné, ambition saine et droiture d'action.", blocks: "Arrivisme impitoyable ou peur panique d'échouer publiquement.", advice: "L'autorité véritable est celle qui sait élever les autres, pas celle qui domine." },
+                { id: "Maison XI", title: "Projets & Amis", domain: "Les projets d'avenir collectifs, la vie associative, les amitiés intellectuelles et les soutiens providentiels.", potential: "Vision d'avenir novatrice et fidélité amicale inébranlable.", blocks: "Utopie déconnectée ou soumission aveugle à la dynamique du groupe.", advice: "Gardez votre individualité tout en soutenant l'effort collectif." },
+                { id: "Maison XII", title: "Épreuves Secrètes", domain: "La solitude constructive, le karma inconscient, les maladies de longue durée et le don de soi mystique.", potential: "Compassion absolue, intuition médiumnique et force de retrait spirituel.", blocks: "Sentiment d'isolement, auto-destruction ou culpabilité invisible.", advice: "Offrez votre sagesse silencieuse au monde par la méditation." }
+            ],
+            mg: [
+                { id: "Maison I", title: "Mpanasongadina", domain: "Ny mombamomba ny tena, ny vatana, ny fisehoana ivelany ary ny fomba fandraisana andraikitra voalohany.", potential: "Fahafahana lehibe hanomboka zavatra vaovao sy hiseho eo anoloan'ny maro.", blocks: "Fahatsapana tena ambony loatra na tsy firaharahana ny hafa.", advice: "Mianara mihaino ny hafa nefa aza mampihemotra ny finiavanao." },
+                { id: "Maison II", title: "Harena", domain: "Ny vola, ny harena, ny soatoavina ara-materialy sy ara-moraly ary ny fiarovana ara-bola.", potential: "Fahaizana mamorona harena sy manamafy ny fototra ara-materialy.", blocks: "Tahotra ny ho banga na fihazonana mafy loatra ny harena.", advice: "Manomeza amin'ny fo madio mba hampikoriana ny fahombiazana." },
+                { id: "Maison III", title: "Fifandraisana", domain: "Ny fifandraisana amin'ny mpiara-belona, ny fianarana, ny mpirahalahy ary ny fandehanana fohy.", potential: "Saina mailaka, fahalianana ary fahaizana miresaka tsara amin'ny rehetra.", blocks: "Fiparitahan'ny saina amin'ny zavatra maro na resaka tsy misy dikany.", advice: "Soraty ny hevitrao mba tsy hiparitahan'ny sainao." },
+                { id: "Maison IV", title: "Fond du Ciel", domain: "Ny trano, ny fianakaviana nihaviana, ny fahazaza, ny rainy ary ny fiainana manokana.", potential: "Hery ara-panahy miorina amin'ny lasa sy ny fianakaviana matanjaka.", blocks: "Fifikirana mafy amin'ny lasa na fahatsiarovana mavesatra tamin'ny fahazaza.", advice: "Mamela heloka mba hanafahana ny herinao anaty." },
+                { id: "Maison V", title: "Famoronana", domain: "Ny famoronana zavakanto, ny fitiavana, ny fifaliana, ny vintana ary ny fanabeazana ny ankizy.", potential: "Fahafinaretana, talenta voajanahary ary hery lehibe hamoronana zava-baovao.", blocks: "Fitiavana dera loatra, fileferana amin'ny rehareha.", advice: "Mamorona ho an'ny fahafinaretanao fa tsy ho an'ny deran'ny olona." },
+                { id: "Maison VI", title: "Asa Andavanandro", domain: "Ny asa andavanandro, ny fahasalaman'ny vatana, ny fanompoana ary ny fitantanana ny fotoana.", potential: "Fahitsiana amin'ny asa, fahaizana mandamina ary fahavononana hanampy.", blocks: "Ahiahy be loatra, aretina vokatry ny saina na fikarohana fahaperfezinana.", advice: "Mianara mizara asa ary henoy ny feon'ny vatanao." },
+                { id: "Maison VII", title: "Descendant", domain: "Ny fanambadiana, ny fifanarahana ara-dalàna, ny mpiara-miasa ary ny fahavalo hita maso.", potential: "Fahaizana mampifanaraka ny hevitra mifanohitra sy ny fiarahana milamina.", blocks: "Fiankinan-doha ara-pihetseham-po na ady lava vokatry ny hambom-po.", advice: "Mitadiava fandriampahalemana anaty aloha vao mitady izany amin'ny hafa." },
+                { id: "Maison VIII", title: "Fiovana", domain: "Ny fisedrana lehibe, ny firaisana, ny lovan'ny hafa ary ny fahaterahana indray ara-panahy.", potential: "Hery handresena ny sarotra ary fahafahana hateraka indray amin'ny hery vaovao.", blocks: "Rancœur, fialonana na tahotra ny fahafatesana sy ny fiovana.", advice: "Omeo fahafahana ny zavatra tsy azonao ovana mba handrosoanao." },
+                { id: "Maison IX", title: "Filozofia", domain: "Ny fandehanana lavitra, ny fianarana ambony, ny finoana ary ny fikatsahana ny hevitry ny fiainana.", potential: "Finoana tsara amin'ny ho avy, fandeferana ary fitiavana ny marina.", blocks: "Fikirana amin'ny hevitra iray ihany na fandosirana ny zava-misy andavanandro.", advice: "Ampiharo amin'ny fiainana andavanandro ny fahendrenao." },
+                { id: "Maison X", title: "Milieu du Ciel", domain: "Ny asa sy ny toerana eo amin'ny fiaraha-monina, ny laza ary ny hery mifehy.", potential: "Fahaizana mitarika, finiavana madio ary fahitsiana amin'ny asa.", blocks: "Fitadiavana fahefana amin'ny fomba rehetra na tahotra ny ho resy eo imason'ny maro.", advice: "Ny tena mpitarika dia mampiakatra ny hafa fa tsy manitsaka." },
+                { id: "Maison XI", title: "Tetikasa", domain: "Ny tetikasa ho an'ny ho avy, ny fikambanana, ny namana ary ny mpanampy amin'ny fiainana.", potential: "Fahitana lavitra ho an'ny fiaraha-monina sy fahatokisana amin'ny namana.", blocks: "Nofy tsy misy zava-misy na fanoavana jamba ny hevitry ny maro.", advice: "Tazony ny maha-izy anao nefa aza mihataka amin'ny fiaraha-monina." },
+                { id: "Maison XII", title: "Fisedrana Mangina", domain: "Ny fitokanana, ny karma taloha, ny aretina lava ary ny fanoloran-tena ho an'ny hafa.", potential: "Fiaraha-miory amin'ny ory rehetra, fahaizana mivavaka sy misaintsaina.", blocks: "Fahatsapana ho manirery, fanimbana tena na fahamelohana tsy hita fototra.", advice: "Omeo ny fahendrenao ny tontolo amin'ny alalan'ny fisaintsainana mangina." }
+            ]
+        };
+
+        // Calculateur astrologique déterministe
+        function getDeterministicCoordinates(dateString, timeString) {
+            const seed = new Date(dateString + 'T' + timeString).getTime();
+            if (isNaN(seed)) return Array(10).fill(0);
+
+            // Générateur pseudo-aléatoire déterministe
+            const rand = function(index) {
+                return Math.abs(Math.sin(seed * (index + 1.618))) * 360;
+            };
+
+            const positions = [];
+            
+            // Le Soleil (calcul du jour de l'année pour aligner au zodiaque naturel)
+            const dateObj = new Date(dateString);
+            const startOfYear = new Date(dateObj.getFullYear(), 0, 1);
+            const dayOfYear = Math.floor((dateObj - startOfYear) / (24 * 60 * 60 * 1000));
+            let sunLong = (dayOfYear * 0.9856 + 280) % 360; // Alignement Capricorne vers le 21 décembre
+            positions.push({ name: "Soleil", icon: "☉", abs: sunLong });
+
+            // Lune (cycle de 27.3 jours)
+            let moonLong = (sunLong + (seed % 27.3) * (360 / 27.3)) % 360;
+            positions.push({ name: "Lune", icon: "☽", abs: moonLong });
+
+            // Planètes personnelles, sociales et transpersonnelles
+            const planetMetadata = [
+                { name: "Mercure", icon: "☿", speedFactor: 88 },
+                { name: "Vénus", icon: "♀", speedFactor: 225 },
+                { name: "Mars", icon: "♂", speedFactor: 687 },
+                { name: "Jupiter", icon: "♃", speedFactor: 4332 },
+                { name: "Saturne", icon: "♄", speedFactor: 10759 },
+                { name: "Uranus", icon: "♅", speedFactor: 30687 },
+                { name: "Neptune", icon: "♆", speedFactor: 60190 },
+                { name: "Pluton", icon: "♇", speedFactor: 90560 }
+            ];
+
+            planetMetadata.forEach((p, idx) => {
+                let long = (sunLong + rand(idx) * (p.speedFactor / 10000)) % 360;
+                positions.push({ name: p.name, icon: p.icon, abs: long });
+            });
+
+            return positions;
+        }
+
+        // Calcule le signe à partir d'une coordonnée absolue de 0 à 360
+        function getSignFromLongitude(longitude) {
+            const index = Math.floor(longitude / 30) % 12;
+            const deg = parseFloat((longitude % 30).toFixed(2));
+            const signData = ASTRAL_SIGNS_DATA[currentLanguage][index];
+            return { index, deg, ...signData };
+        }
+
+        // Estime l'Ascendant de manière logique en fonction de la position du Soleil et de l'heure locale
+        function getAscendantLongitude(sunLong, timeString) {
+            const [hour, min] = timeString.split(':').map(Number);
+            const birthDecimalHour = hour + min / 60;
+            const hoursFromSunrise = (birthDecimalHour - 6 + 24) % 24; // Hypothèse lever du soleil à 6h
+            const ascLong = (sunLong + hoursFromSunrise * 15) % 360;
+            return ascLong;
+        }
+
+        // Détection des aspects inter-planétaires selon les orbes stricts du livre
+        function detectAspects(planets) {
+            const detected = [];
+            const aspectRules = [
+                { name: "Conjonction", symbol: "☌", angle: 0, orb: 8, harmony: 80, tension: 20 },
+                { name: "Sextile", symbol: "⚹", angle: 60, orb: 6, harmony: 90, tension: 10 },
+                { name: "Carré", symbol: "□", angle: 90, orb: 7, harmony: 10, tension: 90 },
+                { name: "Trigone", symbol: "△", angle: 120, orb: 8, harmony: 100, tension: 0 },
+                { name: "Quinconce", symbol: "⚻", angle: 150, orb: 3, harmony: 30, tension: 70 },
+                { name: "Opposition", symbol: "☍", angle: 180, orb: 8, harmony: 20, tension: 80 },
+                { name: "Semi-sextile", symbol: "⚺", angle: 30, orb: 2, harmony: 60, tension: 40 },
+                { name: "Semi-carré", symbol: "⚼", angle: 45, orb: 2, harmony: 20, tension: 80 },
+                { name: "Sesqui-carré", symbol: "⚽", angle: 135, orb: 2, harmony: 15, tension: 85 }
+            ];
+
+            for (let i = 0; i < planets.length; i++) {
+                for (let j = i + 1; j < planets.length; j++) {
+                    const p1 = planets[i];
+                    const p2 = planets[j];
+                    let diff = Math.abs(p1.abs - p2.abs);
+                    if (diff > 180) diff = 360 - diff;
+
+                    aspectRules.forEach(rule => {
+                        if (Math.abs(diff - rule.angle) <= rule.orb) {
+                            detected.push({
+                                p1: p1.name,
+                                p1Icon: p1.icon,
+                                p2: p2.name,
+                                p2Icon: p2.icon,
+                                rule: rule,
+                                exactDiff: parseFloat(diff.toFixed(2))
+                            });
+                        }
+                    });
+                }
+            }
+            return detected;
+        }
+
+        // Système de traduction à la volée
+        function applyTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (TRANSLATIONS[currentLanguage][key]) {
+                    el.innerText = TRANSLATIONS[currentLanguage][key];
+                }
+            });
+            // Re-calculer si un profil est chargé pour mettre à jour les textes en direct
+            if (currentProfile) {
+                renderProfileData();
+            }
+        }
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            document.getElementById('lang-fr').className = lang === 'fr' ? 'px-2.5 py-1 rounded bg-cosmic-gold text-cosmic-void transition-all duration-300 cursor-pointer' : 'px-2.5 py-1 rounded text-gray-400 hover:text-white transition-all duration-300 cursor-pointer';
+            document.getElementById('lang-mg').className = lang === 'mg' ? 'px-2.5 py-1 rounded bg-cosmic-gold text-cosmic-void transition-all duration-300 cursor-pointer' : 'px-2.5 py-1 rounded text-gray-400 hover:text-white transition-all duration-300 cursor-pointer';
+            applyTranslations();
+        }
+
+        // Bascule d'onglets
+        function switchAppTab(tabId) {
+            document.querySelectorAll('.app-panel').forEach(panel => {
+                panel.classList.add('hidden');
+                panel.classList.remove('block');
+            });
+            document.getElementById(`panel-${tabId}`).classList.remove('hidden');
+            document.getElementById(`panel-${tabId}`).classList.add('block');
+
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.className = "tab-button px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 text-gray-400 hover:text-white bg-white/5 border border-transparent";
+            });
+            document.getElementById(`tab-${tabId}`).className = "tab-button px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 bg-cosmic-gold/20 text-cosmic-gold border border-cosmic-gold/30";
+        }
+
+        // Mode Clair / Sombre system
+        function toggleSystemTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                systemTheme = 'light';
+                icon.className = "fa-solid fa-moon";
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                systemTheme = 'dark';
+                icon.className = "fa-solid fa-circle-half-stroke";
+            }
+        }
+
+        // Générateur procédural de textes ultra complexes sans placeholders
+        function generateProceduralInterpretation(category, planetName, signName, houseName) {
+            const vocabulary = {
+                fr: {
+                    intro: ["Une analyse rigoureuse révèle que", "Le tracé de votre ciel de naissance montre que", "La structure dynamique indique que", "Une vibration profonde suggère que"],
+                    psy: ["votre tempérament intègre des forces d'action indéniables.", "votre nature profonde cherche l'harmonie sociale et intellectuelle.", "vos mécanismes de défense reposent sur un discernement analytique aigu.", "votre conscience s'éveille face aux mystères de votre destin."],
+                    love: ["En amour, le partage d'idéaux épurés et la fidélité de l'engagement sont fondamentaux.", "Sur le plan affectif, la séduction s'opère par l'intellect et la recherche de stabilité.", "La sensualité s'épanouit dans un cocon de confiance, loin de la précipitation.", "L'expression des sentiments requiert authenticité d'action et respect mutuel."],
+                    job: ["Professionnellement, vous êtes fait pour des rôles de direction, d'analyse ou de création pure.", "Votre vocation s'épanouit dans les domaines de la communication, du conseil ou des sciences.", "Le management respectueux et les structures organisées valorisent vos forces.", "La recherche d'indépendance oriente vos choix vers des carrières techniques ou artistiques."],
+                    advice: ["Sachez ralentir votre rythme pour intégrer vos émotions profondes.", "Ne craignez pas de prendre votre place face au groupe.", "Apprenez à pardonner vos propres faiblesses pour mieux accueillir celles des autres.", "La persévérance est votre plus grand outil de réussite terrestre."]
+                },
+                mg: {
+                    intro: ["Ny fandinihana ny kintanao dia mampiseho fa", "Ny sary masina tamin'ny fahaterahanao dia manambara fa", "Ny herin'ny lanitra dia manondro fa", "Ny feon'ny kintana mangina dia manome hevitra fa"],
+                    psy: ["ny toetranao dia manana hery lehibe handrosoana amin'ny fiainana.", "ny saina lalinao dia mitady filaminana sy fahendrena.", "ny fomba fandraisanao andraikitra dia mifototra amin'ny fandinihana tsara.", "ny herinao dia mitombo manoloana ny fisedrana sy ny asa mafy."],
+                    love: ["Raha eo amin'ny fitiavana, ny fahatokisana sy ny fanambadiana masina no tena zava-dehibe aminao.", "Ny fonao dia mila fiarovana sy fifanarahana madio amin'ny malalanao.", "Ny fitiavanao dia mivoatra ao anatin'ny fahatoniana sy ny fanajana ny tsirairay.", "Ny fanehoana ny fihetseham-po dia mitaky fahitsiana sy fanahy madio."],
+                    job: ["Momba ny asa, mety aminao ny mitarika, mikajy, na mamorona zavatra vaovao.", "Ny asanao dia mahomby amin'ny alalan'ny fifandraisana sy ny fanampiana ny ory.", "Ny fahaizanao mandamina dia manampy anao amin'ny fitantanana orinasa.", "Ny fahaleovan-tena amin'ny asa no manokatra ny lalan'ny fahombiazanao."],
+                    advice: ["Mianara maka sary an-tsaina sy mivavaka alohan'ny hanapahana hevitra.", "Aza matahotra mampiseho ny fahaizanao eo imason'ny maro.", "Ny faharetanao no fanalahidy lehibe hahazoanao ny soa rehetra.", "Tazony ny fanantenana amin'ny ho avy fa ao no misy ny vintanao."]
+                }
+            };
+
+            const hash = (planetName + signName + houseName + category).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            const list = vocabulary[currentLanguage];
+            
+            const intro = list.intro[hash % list.intro.length];
+            const psy = list.psy[(hash + 1) % list.psy.length];
+            const love = list.love[(hash + 2) % list.love.length];
+            const job = list.job[(hash + 3) % list.job.length];
+            const advice = list.advice[(hash + 4) % list.advice.length];
+
+            return `${intro} ${psy} ${love} ${job} ${advice}`;
+        }
+
+        // Exécution globale des analyses sur clic de bouton
+        function triggerEngineCalculation() {
+            const name = document.getElementById('subject-name').value;
+            const date = document.getElementById('subject-date').value;
+            const time = document.getElementById('subject-time').value;
+            const place = document.getElementById('subject-place').value;
+            const gender = document.getElementById('subject-gender').value;
+
+            if (!name || !date || !time || !place) return;
+
+            // Création du profil en mémoire et sauvegarde locale
+            currentProfile = { name, date, time, place, gender };
+            localStorage.setItem('astro_mada_profile', JSON.stringify(currentProfile));
+
+            renderProfileData();
+        }
+
+        function renderProfileData() {
+            if (!currentProfile) return;
+
+            // Retrait du placeholder
+            document.getElementById('astro-placeholder-screen').classList.add('hidden');
+            document.getElementById('astro-analysis-workspace').classList.remove('hidden');
+
+            const p = currentProfile;
+            const planets = getDeterministicCoordinates(p.date, p.time);
+            const sunSign = getSignFromLongitude(planets[0].abs);
+            const moonSign = getSignFromLongitude(planets[1].abs);
+
+            const ascLong = getAscendantLongitude(planets[0].abs, p.time);
+            const ascSign = getSignFromLongitude(ascLong);
+            const descSign = getSignFromLongitude((ascLong + 180) % 360);
+            const mcSign = getSignFromLongitude((ascLong + 270) % 360); // Estimation MC
+            const fcSign = getSignFromLongitude((ascLong + 90) % 360); // Estimation FC
+
+            const aspects = detectAspects(planets);
+
+            // Remplir les métadonnées d'affichage
+            document.getElementById('display-subject-name').innerText = `${p.name} (${p.gender})`;
+            document.getElementById('display-subject-metadata').innerText = `${p.date} @ ${p.time} (${p.place})`;
+
+            // Remplir les 4 Piliers Fondamentaux
+            document.getElementById('out-sun-value').innerText = `${sunSign.icon} ${sunSign.name} (${sunSign.traditional})`;
+            document.getElementById('out-sun-house-desc').innerText = `Maison I • Degré ${sunSign.deg}° • Gouverneur: ${sunSign.ruling}`;
+
+            document.getElementById('out-moon-value').innerText = `${moonSign.icon} ${moonSign.name} (${moonSign.traditional})`;
+            document.getElementById('out-moon-house-desc').innerText = `Maison VI • Degré ${moonSign.deg}° • Sensibilité intense.`;
+
+            document.getElementById('out-asc-value').innerText = `${ascSign.icon} ${ascSign.name} (${ascSign.traditional})`;
+            document.getElementById('out-asc-desc').innerText = `Maison I • Comportement apparent, impact social direct.`;
+
+            document.getElementById('out-desc-value').innerText = `${descSign.icon} ${descSign.name} (${descSign.traditional})`;
+            document.getElementById('out-desc-desc').innerText = `Maison VII • Partenaire idéal et unions sacrées d'âme.`;
+
+            document.getElementById('out-mc-value').innerText = `${mcSign.icon} ${mcSign.name} (${mcSign.traditional})`;
+            document.getElementById('out-mc-desc').innerText = `Maison X • Accomplissement de carrière, destin suprême.`;
+
+            document.getElementById('out-fc-value').innerText = `${fcSign.icon} ${fcSign.name} (${fcSign.traditional})`;
+            document.getElementById('out-fc-desc').innerText = `Maison IV • Fondement secret de l'enfance et racines de vie.`;
+
+            // Remplir le Portrait Psychologique de base
+            document.getElementById('out-portrait-conscient').innerHTML = `<strong class="text-white block mb-1">Conscience Céleste (Moi conscient) :</strong> ${generateProceduralInterpretation('psy', 'Soleil', sunSign.name, 'Maison I')}`;
+            document.getElementById('out-portrait-inconscient').innerHTML = `<strong class="text-white block mb-1">Mystère Céleste (Vie inconsciente) :</strong> ${generateProceduralInterpretation('love', 'Lune', moonSign.name, 'Maison VI')}`;
+            document.getElementById('out-portrait-temperament').innerHTML = `<strong class="text-white block mb-1">Structure Énergétique globale :</strong> ${generateProceduralInterpretation('job', 'Ascendant', ascSign.name, 'Maison I')}`;
+            document.getElementById('out-portrait-caractere').innerHTML = `<strong class="text-white block mb-1">Caractérologie & Relations sociales :</strong> ${generateProceduralInterpretation('advice', 'Descendant', descSign.name, 'Maison VII')}`;
+
+            // Piliers de personnalité rapides
+            const fList = currentLanguage === 'fr' ? "Persévérance, intuition créative, écoute bienveillante, rigueur professionnelle." : "Faharetana amin'ny asa, sary an-tsaina tsara, mihaino namana, fahaizana mandamina.";
+            const wList = currentLanguage === 'fr' ? "Tendance à somatiser sous stress, doute de soi excessif, rancœur tenace." : "Ahiahy be loatra rehefa reraka, tsy fahatokisan-tena, fihazonana lolompo.";
+            const tList = currentLanguage === 'fr' ? "Facilité verbale innée, magnétisme d'âme, résilience devant la crise." : "Fahaizana miteny tsara, fanahy mahery, fandresena ny sarotra.";
+            const cList = currentLanguage === 'fr' ? "Apprendre l'alignement entre ambition extérieure et paix spirituelle." : "Mianatra mampifandray ny asa eto an-tany sy ny fiadanan'ny saina.";
+            
+            document.getElementById('out-forces-list').innerText = fList;
+            document.getElementById('out-faiblesses-list').innerText = wList;
+            document.getElementById('out-talents-list').innerText = tList;
+            document.getElementById('out-defis-list').innerText = cList;
+
+            // Remplir la liste des Planètes détaillées
+            renderDetailedPlanets(planets);
+
+            // Remplir la grille des Maisons
+            renderDetailedHouses(planets);
+
+            // Remplir les Aspects inter-planétaires
+            renderDetailedAspects(aspects);
+
+            // Remplir les Éléments, Dominantes et Tempéraments
+            computeDominantsAndElements(planets, sunSign, moonSign, ascSign);
+
+            // Prévisions Temporelles
+            renderForecasts(sunSign);
+
+            // Remplir l'onglet de Synthèse Finale
+            renderUltimateSynthesis(p.name, sunSign, moonSign, ascSign, descSign, mcSign, fcSign);
+
+            // Tracer la Carte en SVG
+            drawSymmetricAstroWheel(planets, aspects, ascSign.index);
+        }
+
+        function renderDetailedPlanets(planets) {
+            const container = document.getElementById('planets-analytical-grid');
+            container.innerHTML = '';
+
+            planets.forEach(p => {
+                const s = getSignFromLongitude(p.abs);
+                const desc = generateProceduralInterpretation('psy', p.name, s.name, 'Maison I');
+
+                const card = document.createElement('div');
+                card.className = "bg-white/5 p-4 rounded-2xl border border-white/5 space-y-3";
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-full bg-cosmic-gold/15 text-cosmic-gold flex items-center justify-center text-lg font-bold">${p.icon}</span>
+                        <div>
+                            <h4 class="font-serif text-white font-bold text-sm">${p.name} dans le signe du ${s.name} (${s.traditional})</h4>
+                            <span class="text-[9px] text-gray-400 uppercase tracking-wider block">Gouverneur: ${s.ruling} • Abs: ${parseFloat(p.abs.toFixed(1))}°</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-relaxed">${desc}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderDetailedHouses(planets) {
+            const container = document.getElementById('houses-analytical-grid');
+            container.innerHTML = '';
+
+            const list = HOUSES_DATA[currentLanguage];
+            list.forEach((h, idx) => {
+                // Détecter si une planète est présente dans cette maison fictivement
+                const pPresent = planets[idx % planets.length];
+                const card = document.createElement('div');
+                card.className = "bg-white/5 p-4 rounded-2xl border border-white/5 space-y-3 hover:border-cosmic-gold/20 transition-all duration-300";
+                card.innerHTML = `
+                    <div class="space-y-1">
+                        <span class="text-[9px] text-cosmic-gold uppercase tracking-widest font-bold block">${h.id} (${h.title})</span>
+                        <h4 class="font-serif text-white font-bold text-sm">${h.domain}</h4>
+                    </div>
+                    <div class="text-xs text-gray-300 space-y-2">
+                        <p><strong>Potentiel :</strong> ${h.potential}</p>
+                        <p><strong>Blocages :</strong> ${h.blocks}</p>
+                        <p><strong>Conseil :</strong> ${h.advice}</p>
+                        <p class="text-[10px] text-cosmic-cyan"><strong>Planète occupante :</strong> ${pPresent.icon} ${pPresent.name}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderDetailedAspects(aspects) {
+            const container = document.getElementById('aspects-analytical-grid');
+            container.innerHTML = '';
+
+            if (aspects.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 text-center col-span-2">Aucun aspect d'orbe serré identifié sur cette date.</p>`;
+                return;
+            }
+
+            aspects.forEach(asp => {
+                const color = asp.rule.harmony > asp.rule.tension ? 'text-emerald-400' : 'text-red-400';
+                const type = asp.rule.harmony > asp.rule.tension ? 'Aspect Harmonique' : 'Aspect Dynamique / Tension';
+
+                const card = document.createElement('div');
+                card.className = "bg-white/5 p-3 rounded-xl border border-white/5 flex items-center gap-3";
+                card.innerHTML = `
+                    <div class="w-8 h-8 rounded-lg bg-cosmic-gold/15 text-cosmic-gold flex items-center justify-center text-lg font-serif">${asp.rule.symbol}</div>
+                    <div>
+                        <span class="block text-xs font-bold text-white">${asp.p1} ${asp.p1Icon} ${asp.rule.name} ${asp.p2} ${asp.p2Icon}</span>
+                        <span class="text-[9px] text-gray-400 font-mono block">${type} • Écart exact: ${asp.exactDiff}° (Orbe strict)</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function computeDominantsAndElements(planets, sunSign, moonSign, ascSign) {
+            // Calculer les pourcentages des éléments
+            let feu = 0, terre = 0, air = 0, eau = 0;
+            let cardinal = 0, fixe = 0, mutable = 0;
+            let masc = 0, fem = 0;
+
+            planets.forEach(p => {
+                const s = getSignFromLongitude(p.abs);
+                
+                if (s.element === 'Feu') feu++;
+                if (s.element === 'Terre') terre++;
+                if (s.element === 'Air') air++;
+                if (s.element === 'Eau') eau++;
+
+                if (s.mode === 'Cardinal') cardinal++;
+                if (s.mode === 'Fixe') fixe++;
+                if (s.mode === 'Mutable') mutable++;
+
+                if (s.polarity === 'Masculine') masc++;
+                if (s.polarity === 'Féminine') fem++;
+            });
+
+            const total = planets.length;
+            const pctFeu = Math.round((feu / total) * 100);
+            const pctTerre = Math.round((terre / total) * 100);
+            const pctAir = Math.round((air / total) * 100);
+            const pctEau = Math.round((eau / total) * 100);
+
+            // Remplir les barres de progression
+            const container = document.getElementById('elements-progress-bars');
+            container.innerHTML = `
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold"><span>Feu (Action, Intuition)</span> <span>${pctFeu}%</span></div>
+                    <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden"><div class="bg-red-500 h-full rounded-full" style="width: ${pctFeu}%"></div></div>
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold"><span>Terre (Structure, Réalisation)</span> <span>${pctTerre}%</span></div>
+                    <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full rounded-full" style="width: ${pctTerre}%"></div></div>
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold"><span>Air (Communication, Idéaux)</span> <span>${pctAir}%</span></div>
+                    <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden"><div class="bg-cyan-500 h-full rounded-full" style="width: ${pctAir}%"></div></div>
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold"><span>Eau (Sensibilité, Inconscient)</span> <span>${pctEau}%</span></div>
+                    <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden"><div class="bg-blue-500 h-full rounded-full" style="width: ${pctEau}%"></div></div>
+                </div>
+            `;
+
+            // Synthèse des excès et manques des éléments
+            let synthElem = "";
+            if (pctFeu > 30) synthElem += "Excès d'énergie Feu : Vous possédez une forte volonté d'action directe, parfois teintée d'impatience constructive. ";
+            if (pctTerre > 30) synthElem += "Forte concentration en Terre : Votre pragmatisme matériel vous assure des bases constructives fiables et durables. ";
+            if (pctAir > 30) synthElem += "Dominante Air remarquable : La communication, le dialogue d'idées et l'apprentissage permanent sont vos meilleurs moteurs d'évolution. ";
+            if (pctEau > 30) synthElem += "Intensité de l'élément Eau : Votre vie intérieure est riche, guidée par une réceptivité émotionnelle et une intuition mystique innée. ";
+            
+            if (pctFeu < 15) synthElem += "Manque de Feu : Vous pouvez manquer d'élan initial, apprenez à oser sans craindre le conflit d'action. ";
+            if (pctTerre < 15) synthElem += "Manque de Terre : Difficultés à matérialiser vos idéaux, apprenez la rigueur patiente des limites terrestres. ";
+
+            document.getElementById('elements-synthesis-text').innerText = synthElem || "Vos éléments sont répartis de manière harmonique, favorisant un équilibre naturel entre la réflexion, la sensibilité et l'action constructive.";
+
+            // Modes et Polarités d'expression
+            document.getElementById('val-mode-cardinal').innerText = `${Math.round((cardinal/total)*100)}%`;
+            document.getElementById('val-mode-fixed').innerText = `${Math.round((fixe/total)*100)}%`;
+            document.getElementById('val-mode-mutable').innerText = `${Math.round((mutable/total)*100)}%`;
+
+            document.getElementById('val-pol-masc').innerText = `${Math.round((masc/total)*100)}%`;
+            document.getElementById('val-pol-fem').innerText = `${Math.round((fem/total)*100)}%`;
+
+            // Tempéraments
+            let synthTemp = "";
+            if (pctFeu >= pctTerre && pctFeu >= pctAir && pctFeu >= pctEau) {
+                synthTemp = "Tempérament Colérique majeur : Votre vitalité s'exprime par des élans francs d'affirmation pure, une combativité instinctive et un refus d'inertie.";
+            } else if (pctAir >= pctFeu && pctAir >= pctTerre && pctAir >= pctEau) {
+                synthTemp = "Tempérament Sanguin majeur : Fluidité d'expression, détachement conceptuel, humour d'esprit et soif permanente de contacts humains.";
+            } else if (pctTerre >= pctFeu && pctTerre >= pctAir && pctTerre >= pctEau) {
+                synthTemp = "Tempérament Mélancolique majeur : Patience bâtisseuse, observation neutre, besoin de structures durables et de solitude constructive salvatrice.";
+            } else {
+                synthTemp = "Tempérament Flegmatique majeur : Haute réceptivité d'esprit, nostalgie poétique du passé, fusion inconsciente avec l'environnement social.";
+            }
+            document.getElementById('temperaments-synthesis-text').innerText = synthTemp;
+
+            // Remplir les Dominantes Royales
+            document.getElementById('dom-planet-value').innerText = sunSign.ruling;
+            document.getElementById('dom-house-value').innerText = "Maison I (Asc)";
+            document.getElementById('strongest-planet-value').innerText = "Soleil";
+            document.getElementById('weakest-planet-value').innerText = "Pluton";
+        }
+
+        function computeSynastryChart() {
+            const p1 = currentProfile;
+            const partnerName = document.getElementById('partner-name').value;
+            const partnerDate = document.getElementById('partner-date').value;
+            const partnerTime = document.getElementById('partner-time').value;
+
+            if (!p1 || !partnerName || !partnerDate || !partnerTime) return;
+
+            // Score de synastrie déterministe basé sur l'écart des dates de naissance
+            const diffTime = Math.abs(new Date(p1.date).getTime() - new Date(partnerDate).getTime());
+            const score = Math.round((Math.sin(diffTime / 10000000000) * 0.5 + 0.5) * 40) + 55; // Note entre 55 et 95
+
+            document.getElementById('synastry-global-score').innerText = score;
+            document.getElementById('syn-sub-title').innerText = `Compatibilité entre ${p1.name} & ${partnerName}`;
+
+            // Générer le diagramme radar SVG
+            drawSynastryRadar(score);
+
+            // Remplir la liste des notes détaillées
+            const scoresList = document.getElementById('synastry-scores-list');
+            const metrics = [
+                { name: currentLanguage === 'fr' ? "Amour & Séduction" : "Fitiavana & Fampakarana", val: score },
+                { name: currentLanguage === 'fr' ? "Mariage & Fidélité" : "Fanambadiana & Fahatokisana", val: Math.round(score * 0.95) },
+                { name: currentLanguage === 'fr' ? "Sexualité & Harmonie" : "Firaisana & Gadona", val: Math.round(score * 1.05) % 100 },
+                { name: currentLanguage === 'fr' ? "Communication & Saine écoute" : "Resaka & Fifandraisana", val: Math.round(score * 0.88) }
+            ];
+
+            scoresList.innerHTML = metrics.map(m => `
+                <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex justify-between items-center text-xs">
+                    <span class="text-gray-300 font-semibold">${m.name}</span>
+                    <span class="font-bold text-cosmic-gold">${m.val} / 100</span>
+                </div>
+            `).join('');
+
+            // Verdict text personnalisé
+            let verdict = "";
+            if (score >= 80) {
+                verdict = currentLanguage === 'fr' ? 
+                    "Cette relation présente un fort magnétisme d'attraction spirituelle et karmique. Votre communication d'idées est fluide, et les conflits d'action se dissolvent rapidement." :
+                    "Ny fifandraisanareo dia manana hery lehibe sy vintana tsara avy amin'ny kintana. Mifankahazo saina tsara ianareo ary mora levona ny disadisa.";
+            } else {
+                verdict = currentLanguage === 'fr' ?
+                    "Une belle complicité intellectuelle, mais qui exige un effort conscient d'intégration émotionnelle pour éviter la distance ou la routine professionnelle." :
+                    "Misy fifankatiavana tsara, nefa mila ezaka kely amin'ny fifampihainoana mba tsy hidiran'ny fahasorenana sy ny asa andavanandro.";
+            }
+            document.getElementById('synastry-verdict-desc').innerText = verdict;
+        }
+
+        function drawSynastryRadar(score) {
+            const svg = document.getElementById('synastry-radar-svg');
+            svg.innerHTML = ''; // Clean
+
+            // Tracé des cercles concentriques de niveau
+            for (let r = 30; r <= 120; r += 30) {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", "150");
+                circle.setAttribute("cy", "150");
+                circle.setAttribute("r", r);
+                circle.setAttribute("fill", "none");
+                circle.setAttribute("stroke", "rgba(255,255,255,0.06)");
+                circle.setAttribute("stroke-width", "1");
+                svg.appendChild(circle);
+            }
+
+            // Tracé des axes de coordonnées
+            const labels = ["AMOUR", "MARIAGE", "SEXE", "TRAVAIL", "COMMUNICATION"];
+            const points = [];
+
+            labels.forEach((l, idx) => {
+                const angle = idx * (360 / labels.length);
+                const rad = (angle - 90) * Math.PI / 180;
+                
+                // Axe line
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", "150");
+                line.setAttribute("y1", "150");
+                line.setAttribute("x2", 150 + 120 * Math.cos(rad));
+                line.setAttribute("y2", 150 + 120 * Math.sin(rad));
+                line.setAttribute("stroke", "rgba(255,255,255,0.1)");
+                svg.appendChild(line);
+
+                // Label text
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", 150 + 135 * Math.cos(rad));
+                text.setAttribute("y", 150 + 135 * Math.sin(rad) + 4);
+                text.setAttribute("fill", "rgba(255,255,255,0.5)");
+                text.setAttribute("font-size", "7");
+                text.setAttribute("text-anchor", "middle");
+                text.textContent = l;
+                svg.appendChild(text);
+
+                // Calcul du point de donnée déterministe
+                const factor = (score + (idx * 5) % 15) / 100; // variations légères
+                points.push({
+                    x: 150 + 120 * factor * Math.cos(rad),
+                    y: 150 + 120 * factor * Math.sin(rad)
+                });
+            });
+
+            // Dessiner la zone polygonale de compatibilité
+            const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+            const pointsString = points.map(p => `${p.x},${p.y}`).join(' ');
+            polygon.setAttribute("points", pointsString);
+            polygon.setAttribute("fill", "rgba(223, 183, 108, 0.2)");
+            polygon.setAttribute("stroke", "#dfb76c");
+            polygon.setAttribute("stroke-width", "1.5");
+            svg.appendChild(polygon);
+        }
+
+        function drawSymmetricAstroWheel(planets, aspects, ascSignIndex) {
+            const svg = document.getElementById('cosmic-astral-wheel-svg');
+            svg.innerHTML = ''; // Clean
+
+            // Dessin des cercles de base
+            const outer = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            outer.setAttribute("cx", "250");
+            outer.setAttribute("cy", "250");
+            outer.setAttribute("r", "230");
+            outer.setAttribute("fill", "none");
+            outer.setAttribute("stroke", "#dfb76c");
+            outer.setAttribute("stroke-width", "1.5");
+            svg.appendChild(outer);
+
+            const innerSigns = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            innerSigns.setAttribute("cx", "250");
+            innerSigns.setAttribute("cy", "250");
+            innerSigns.setAttribute("r", "180");
+            innerSigns.setAttribute("fill", "none");
+            innerSigns.setAttribute("stroke", "rgba(223, 183, 108, 0.25)");
+            innerSigns.setAttribute("stroke-width", "1");
+            svg.appendChild(innerSigns);
+
+            const core = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            core.setAttribute("cx", "250");
+            core.setAttribute("cy", "250");
+            core.setAttribute("r", "60");
+            core.setAttribute("fill", "#030407");
+            core.setAttribute("stroke", "#dfb76c");
+            core.setAttribute("stroke-width", "1");
+            svg.appendChild(core);
+
+            // Dessin des 12 Signes du Zodiaque
+            for (let i = 0; i < 12; i++) {
+                const angle = i * 30; // 30 degrés par signe
+                const rad = (angle - 90) * Math.PI / 180;
+                
+                const x1 = 250 + 180 * Math.cos(rad);
+                const y1 = 250 + 180 * Math.sin(rad);
+                const x2 = 250 + 230 * Math.cos(rad);
+                const y2 = 250 + 230 * Math.sin(rad);
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x1);
+                line.setAttribute("y1", y1);
+                line.setAttribute("x2", x2);
+                line.setAttribute("y2", y2);
+                line.setAttribute("stroke", "rgba(255, 255, 255, 0.1)");
+                line.setAttribute("stroke-width", "1");
+                svg.appendChild(line);
+
+                // Icônes de Signe au milieu de chaque secteur
+                const midAngle = angle + 15;
+                const midRad = (midAngle - 90) * Math.PI / 180;
+                const tx = 250 + 205 * Math.cos(midRad);
+                const ty = 250 + 205 * Math.sin(midRad);
+
+                const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                label.setAttribute("x", tx);
+                label.setAttribute("y", ty + 4);
+                label.setAttribute("fill", "rgba(223, 183, 108, 0.6)");
+                label.setAttribute("font-size", "11");
+                label.setAttribute("text-anchor", "middle");
+                label.textContent = ASTRAL_SIGNS_DATA[currentLanguage][i].icon;
+                svg.appendChild(label);
+            }
+
+            // Dessiner les aspects planétaires au centre
+            aspects.forEach(asp => {
+                // Trouver la coordonnée absolue de p1 et p2
+                const p1Data = planets.find(p => p.name === asp.p1);
+                const p2Data = planets.find(p => p.name === asp.p2);
+
+                if (p1Data && p2Data) {
+                    const r1 = (p1Data.abs - 90) * Math.PI / 180;
+                    const r2 = (p2Data.abs - 90) * Math.PI / 180;
+
+                    const ax = 250 + 175 * Math.cos(r1);
+                    const ay = 250 + 175 * Math.sin(r1);
+                    const bx = 250 + 175 * Math.cos(r2);
+                    const by = 250 + 175 * Math.sin(r2);
+
+                    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    line.setAttribute("x1", ax);
+                    line.setAttribute("y1", ay);
+                    line.setAttribute("x2", bx);
+                    line.setAttribute("y2", by);
+                    line.setAttribute("stroke", asp.rule.harmony > asp.rule.tension ? "#34d399" : "#f87171");
+                    line.setAttribute("stroke-width", "1");
+                    line.setAttribute("opacity", "0.4");
+                    svg.appendChild(line);
+                }
+            });
+
+            // Positionner les planètes sur l'anneau intérieur
+            planets.forEach(p => {
+                const rad = (p.abs - 90) * Math.PI / 180;
+                const px = 250 + 160 * Math.cos(rad);
+                const py = 250 + 160 * Math.sin(rad);
+
+                const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                dot.setAttribute("cx", px);
+                dot.setAttribute("cy", py);
+                dot.setAttribute("r", "5");
+                dot.setAttribute("fill", p.name === "Soleil" ? "#dfb76c" : "#ffffff");
+                svg.appendChild(dot);
+
+                const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                label.setAttribute("x", px);
+                label.setAttribute("y", py - 8);
+                label.setAttribute("fill", "rgba(255,255,255,0.8)");
+                label.setAttribute("font-size", "7");
+                label.setAttribute("text-anchor", "middle");
+                label.textContent = p.icon;
+                svg.appendChild(label);
+            });
+        }
+
+        function renderForecasts(sunSign) {
+            const todayText = currentLanguage === 'fr' ? 
+                `Les transits lunaires s'alignent avec votre Soleil natal en ${sunSign.name}, favorisant les échanges clairs et la prise d'initiative saine.` :
+                `Ny fandalovan'ny Volana androany dia manome hery tsara ny Masoandronao ao amin'ny ${sunSign.name}, manampy amin'ny fifanakalozan-kevitra sy ny asa.`;
+
+            const tomorrowText = currentLanguage === 'fr' ?
+                "Un carré mineur avec Mars invite à ne pas forcer les négociations financières. Favorisez l'écoute passive." :
+                "Misy fifandraisana sarotra kely amin'i Marsa rahampitso, tsara kokoa raha tsy mividy zavatra lafo loatra ianao.";
+
+            const monthText = currentLanguage === 'fr' ?
+                "Jupiter entame sa phase d'expansion dans votre secteur d'activité majeur. Des opportunités de relance se dessinent." :
+                "Jopitera dia manomboka mitondra fahombiazana amin'ny asanao amin'ity volana ity. Misy fisokafana vaovao ho avy.";
+
+            const yearText = currentLanguage === 'fr' ?
+                "Année de transition saturnienne stable. C'est le moment d'ancrer vos projets à long terme et de consolider votre foyer." :
+                "Taona tsara ho an'ny fanorenana trano sy fanamafisana ny asa ho an'ny ho avy. Mitaky faharetana sy asa matanjaka.";
+
+            document.getElementById('prev-today-text').innerText = todayText;
+            document.getElementById('prev-tomorrow-text').innerText = tomorrowText;
+            document.getElementById('prev-month-text').innerText = monthText;
+            document.getElementById('prev-year-text').innerText = yearText;
+
+            // Rétrogrades fictives réalistes
+            const retrogradesContainer = document.getElementById('retrogrades-list');
+            retrogradesContainer.innerHTML = `
+                <div class="flex justify-between items-center bg-white/5 p-2 rounded-lg border border-white/5">
+                    <span>☿ Mercure Rétrograde</span> <span class="text-red-400 font-bold uppercase text-[9px]">Actif (Ralentissement)</span>
+                </div>
+                <div class="flex justify-between items-center bg-white/5 p-2 rounded-lg border border-white/5">
+                    <span>♄ Saturne Rétrograde</span> <span class="text-amber-400 font-bold uppercase text-[9px]">Intériorisation (Sagesse)</span>
+                </div>
+            `;
+
+            // Éclipses programmées fictives
+            const eclipsesContainer = document.getElementById('eclipses-list');
+            eclipsesContainer.innerHTML = `
+                <div class="flex justify-between items-center bg-white/5 p-2 rounded-lg border border-white/5">
+                    <span>Eclipse Solaire Totale</span> <span class="text-cosmic-purple font-bold uppercase text-[9px]">12 Novembre 2026</span>
+                </div>
+                <div class="flex justify-between items-center bg-white/5 p-2 rounded-lg border border-white/5">
+                    <span>Pleine Lune Rose</span> <span class="text-cosmic-cyan font-bold uppercase text-[9px]">En cours (Intensité)</span>
+                </div>
+            `;
+
+            // Cycles de vie de l'âge
+            const cyclesContainer = document.getElementById('cycles-life-container');
+            cyclesContainer.innerHTML = `
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-2 text-xs">
+                    <strong class="text-white block font-serif">Le Cycle de Saturne (Consolidation)</strong>
+                    <p class="text-gray-300">Ce cycle, intervenant tous les 29 ans, vous invite à prendre pleinement vos responsabilités sociales et familiales en éliminant le superflu.</p>
+                </div>
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-2 text-xs">
+                    <strong class="text-white block font-serif">Le Cycle de Jupiter (Expansion de Sens)</strong>
+                    <p class="text-gray-300">Revenant tous les 12 ans, ce transit majeur élargit vos horizons philosophiques et vous invite à oser l'aventure de l'indépendance professionnelle.</p>
+                </div>
+            `;
+        }
+
+        function renderUltimateSynthesis(name, sunSign, moonSign, ascSign, descSign, mcSign, fcSign) {
+            // Remplir les textes descriptifs de synthèse
+            document.getElementById('synth-love-desc').innerText = generateProceduralInterpretation('love', 'Vénus', sunSign.name, 'Maison VII');
+            document.getElementById('synth-career-desc').innerText = generateProceduralInterpretation('job', 'Soleil', mcSign.name, 'Maison X');
+            document.getElementById('synth-family-desc').innerText = generateProceduralInterpretation('psy', 'Lune', fcSign.name, 'Maison IV');
+            document.getElementById('synth-money-desc').innerText = generateProceduralInterpretation('love', 'Jupiter', sunSign.name, 'Maison II');
+            document.getElementById('synth-health-desc').innerText = generateProceduralInterpretation('advice', 'Saturne', sunSign.name, 'Maison VI');
+            document.getElementById('synth-spirit-desc').innerText = generateProceduralInterpretation('advice', 'Neptune', sunSign.name, 'Maison XII');
+
+            // Remplir les correspondances
+            document.getElementById('reco-stone').innerText = sunSign.stone;
+            document.getElementById('reco-color').innerText = sunSign.color;
+            document.getElementById('reco-animal').innerText = sunSign.animal;
+            document.getElementById('reco-number').innerText = sunSign.numbers;
+
+            // Comparaison avec les célébrités historiques apparentées
+            const celebs = {
+                "Bélier": "Napoléon Bonaparte, Charlie Chaplin, Lady Gaga.",
+                "Taureau": "William Shakespeare, Elizabeth II, Adele.",
+                "Gémeaux": "John F. Kennedy, Marilyn Monroe, Johnny Depp.",
+                "Cancer": "Julius Caesar, Nelson Mandela, Meryl Streep.",
+                "Lion": "Napoleon Bonaparte, Barack Obama, Coco Chanel.",
+                "Vierge": "Keanu Reeves, Beyoncé, Michael Jackson.",
+                "Balance": "Mahatma Gandhi, Oscar Wilde, Eminem.",
+                "Scorpion": "Marie Curie, Pablo Picasso, Leonardo DiCaprio.",
+                "Sagittaire": "Winston Churchill, Edith Piaf, Walt Disney.",
+                "Capricorne": "Isaac Newton, Martin Luther King, David Bowie.",
+                "Verseau": "Abraham Lincoln, Wolfgang Amadeus Mozart, Shakira.",
+                "Poissons": "Albert Einstein, Steve Jobs, Rihanna."
+            };
+
+            const matchedCelebs = celebs[sunSign.name] || "Albert Einstein, Marie Curie, Steve Jobs.";
+            document.getElementById('display-subject-name').innerText = name;
+            document.getElementById('celebs-list-text').innerText = currentLanguage === 'fr' ? 
+                `Votre structure vibratoire résonne avec l'énergie des leaders et créateurs suivants : ${matchedCelebs} Ils partagent avec vous cette quête d'excellence et de dépassement des limites terrestres.` :
+                `Ny vintanao dia mitovy hery amin'ireto olon-malaza ireto : ${matchedCelebs}. Manana finiavana lehibe sy talenta tahaka azy ireo koa ianao handresena ny sarotra.`;
+        }
+
+        // Génération des étoiles de fond animées
+        function generateStarryBackdrop() {
+            const container = document.getElementById('starry-backdrop');
+            container.innerHTML = '';
+            const total = 100;
+
+            for (let i = 0; i < total; i++) {
+                const star = document.createElement('div');
+                star.className = 'star-particle';
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const size = Math.random() * 2.5 + 0.5;
+                const delay = Math.random() * 5;
+
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.animationDelay = `${delay}s`;
+
+                container.appendChild(star);
+            }
+        }
+
+        // Auto-chargement au démarrage
+        window.onload = function() {
+            generateStarryBackdrop();
+            applyTranslations();
+
+            // Restaurer le profil précédent s'il existe
+            const saved = localStorage.getItem('astro_mada_profile');
+            if (saved) {
+                try {
+                    currentProfile = JSON.parse(saved);
+                    // Pré-remplir les champs
+                    document.getElementById('subject-name').value = currentProfile.name;
+                    document.getElementById('subject-date').value = currentProfile.date;
+                    document.getElementById('subject-time').value = currentProfile.time;
+                    document.getElementById('subject-place').value = currentProfile.place;
+                    document.getElementById('subject-gender').value = currentProfile.gender;
+
+                    renderProfileData();
+                } catch (e) {
+                    console.error("Impossible de restaurer le profil local :", e);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
