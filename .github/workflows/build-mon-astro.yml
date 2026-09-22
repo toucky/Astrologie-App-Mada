@@ -1,0 +1,35 @@
+name: Build Mon Astro Natal APK
+on:
+  push:
+    branches:
+      - build-mon-astro-natal-v12
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract Android project
+        run: unzip -o -q Mon-Astro-Android-Studio-Project-V1.2.zip
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.7'
+
+      - name: Build debug APK
+        working-directory: Mon-Astro-Android-Project
+        run: gradle assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mon-Astro-Natal-V1.2-APK
+          path: Mon-Astro-Android-Project/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
