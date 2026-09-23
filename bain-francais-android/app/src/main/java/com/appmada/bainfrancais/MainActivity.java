@@ -13,6 +13,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -56,7 +57,7 @@ public class MainActivity extends Activity {
             StringBuilder html = new StringBuilder();
             String line;
             while ((line = br.readLine()) != null) html.append(line).append('\n');
-            webView.loadDataWithBaseURL("https://app-mada.pages.dev/", html.toString(), "text/html", "UTF-8", null);
+            webView.loadDataWithBaseURL("https://appmada.pages.dev/", html.toString(), "text/html", "UTF-8", null);
         } catch (Exception e) {
             webView.loadData("<h3>Impossible de charger Bain de français.</h3>", "text/html", "UTF-8");
         }
@@ -67,7 +68,8 @@ public class MainActivity extends Activity {
     }
 
     public class AppBridge {
-        private final String base = "https://app-mada.pages.dev/api/bain-francais";
+        private final String endpoint = "https://xvwsdoqiesnqpyrqahwf.supabase.co/functions/v1/app-mada-admin-api";
+        private final String publishableKey = "sb_publishable_DECsSkq8OiZ0x0pwI3xEZg_LfnT1T41";
 
         @JavascriptInterface public String deviceId() {
             String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -83,32 +85,32 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface public void openExternal(String url) {
-            if (url == null || !(url.startsWith("https://") || url.startsWith("http://"))) return;
+            if (url == null || !url.startsWith("https://")) return;
             runOnUiThread(() -> {
                 try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))); } catch (Exception ignored) {}
             });
         }
 
-        @JavascriptInterface public String request(String method, String path, String body) {
-            if (path == null || !path.startsWith("/") || path.contains("..")) {
-                return "{\"ok\":false,\"status\":400,\"error\":\"Chemin API refusé\"}";
-            }
+        @JavascriptInterface public String request(String body) {
             HttpURLConnection c = null;
             try {
-                URL u = new URL(base + path);
-                c = (HttpURLConnection) u.openConnection();
-                c.setRequestMethod(method == null ? "GET" : method);
+                String payload = body == null || body.isEmpty() ? "{}" : body;
+                String token = "";
+                try { token = new JSONObject(payload).optString("_token", ""); } catch (Exception ignored) {}
+
+                c = (HttpURLConnection) new URL(endpoint).openConnection();
+                c.setRequestMethod("POST");
                 c.setConnectTimeout(15000);
                 c.setReadTimeout(120000);
                 c.setRequestProperty("Accept", "application/json");
                 c.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+                c.setRequestProperty("apikey", publishableKey);
                 c.setRequestProperty("X-App-Id", "bain-francais");
                 c.setRequestProperty("X-Device-Id", deviceId());
-                if (body != null && !body.isEmpty() && !"GET".equalsIgnoreCase(method)) {
-                    c.setDoOutput(true);
-                    try (OutputStream os = c.getOutputStream()) {
-                        os.write(body.getBytes(StandardCharsets.UTF_8));
-                    }
+                if (!token.isEmpty()) c.setRequestProperty("x-app-mada-token", token);
+                c.setDoOutput(true);
+                try (OutputStream os = c.getOutputStream()) {
+                    os.write(payload.getBytes(StandardCharsets.UTF_8));
                 }
                 int status = c.getResponseCode();
                 InputStream in = status >= 200 && status < 400 ? c.getInputStream() : c.getErrorStream();
@@ -116,11 +118,10 @@ public class MainActivity extends Activity {
                 if (in != null) try (BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
                     String line; while ((line = br.readLine()) != null) sb.append(line);
                 }
-                String payload = sb.toString();
-                if (payload.isEmpty()) payload = "{}";
-                return "{\"ok\":" + (status >= 200 && status < 300) + ",\"status\":" + status + ",\"data\":" + payload + "}";
+                if (sb.length() == 0) return "{\"ok\":false,\"error\":\"empty_response\",\"status\":" + status + "}";
+                return sb.toString();
             } catch (Exception e) {
-                return "{\"ok\":false,\"status\":0,\"error\":\"" + safe(e.getMessage()) + "\"}";
+                return "{\"ok\":false,\"error\":\"network_error\",\"detail\":\"" + safe(e.getMessage()) + "\"}";
             } finally { if (c != null) c.disconnect(); }
         }
 
