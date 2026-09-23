@@ -92,12 +92,38 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface public String request(String body) {
-            HttpURLConnection c = null;
             try {
                 String payload = body == null || body.isEmpty() ? "{}" : body;
-                String token = "";
-                try { token = new JSONObject(payload).optString("_token", ""); } catch (Exception ignored) {}
+                JSONObject requestJson = new JSONObject(payload);
+                String token = requestJson.optString("_token", "");
+                String action = requestJson.optString("action", "");
+                String result = post(payload, token);
 
+                if (("bain_login".equals(action) || "bain_signup".equals(action))) {
+                    try {
+                        JSONObject login = new JSONObject(result);
+                        if (login.optBoolean("ok", false)) {
+                            String newToken = login.optString("token", "");
+                            if (!newToken.isEmpty()) {
+                                JSONObject me = new JSONObject(post("{\"action\":\"bain_me\"}", newToken));
+                                if (me.optBoolean("ok", false)) {
+                                    if (me.has("user")) login.put("user", me.getJSONObject("user"));
+                                    if (me.has("wallet")) login.put("wallet", me.getJSONObject("wallet"));
+                                    result = login.toString();
+                                }
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                }
+                return result;
+            } catch (Exception e) {
+                return "{\"ok\":false,\"error\":\"network_error\",\"detail\":\"" + safe(e.getMessage()) + "\"}";
+            }
+        }
+
+        private String post(String payload, String token) {
+            HttpURLConnection c = null;
+            try {
                 c = (HttpURLConnection) new URL(endpoint).openConnection();
                 c.setRequestMethod("POST");
                 c.setConnectTimeout(15000);
@@ -107,7 +133,7 @@ public class MainActivity extends Activity {
                 c.setRequestProperty("apikey", publishableKey);
                 c.setRequestProperty("X-App-Id", "bain-francais");
                 c.setRequestProperty("X-Device-Id", deviceId());
-                if (!token.isEmpty()) c.setRequestProperty("x-app-mada-token", token);
+                if (token != null && !token.isEmpty()) c.setRequestProperty("x-app-mada-token", token);
                 c.setDoOutput(true);
                 try (OutputStream os = c.getOutputStream()) {
                     os.write(payload.getBytes(StandardCharsets.UTF_8));
@@ -122,7 +148,9 @@ public class MainActivity extends Activity {
                 return sb.toString();
             } catch (Exception e) {
                 return "{\"ok\":false,\"error\":\"network_error\",\"detail\":\"" + safe(e.getMessage()) + "\"}";
-            } finally { if (c != null) c.disconnect(); }
+            } finally {
+                if (c != null) c.disconnect();
+            }
         }
 
         private String safe(String s) {
