@@ -34,8 +34,8 @@ public class MainActivity extends Activity {
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
         s.setMediaPlaybackRequiresUserGesture(false);
-        s.setAllowFileAccess(true);
-        s.setAllowContentAccess(true);
+        s.setAllowFileAccess(false);
+        s.setAllowContentAccess(false);
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient() {
             @Override public void onPermissionRequest(PermissionRequest request) {
@@ -48,7 +48,18 @@ public class MainActivity extends Activity {
             }
         });
         webView.addJavascriptInterface(new AppBridge(), "AppMada");
-        webView.loadUrl("file:///android_asset/index.html");
+        loadAppPage();
+    }
+
+    private void loadAppPage() {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("index.html"), StandardCharsets.UTF_8))) {
+            StringBuilder html = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) html.append(line).append('\n');
+            webView.loadDataWithBaseURL("https://app-mada.pages.dev/", html.toString(), "text/html", "UTF-8", null);
+        } catch (Exception e) {
+            webView.loadData("<h3>Impossible de charger Bain de français.</h3>", "text/html", "UTF-8");
+        }
     }
 
     @Override public void onBackPressed() {
@@ -72,12 +83,16 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface public void openExternal(String url) {
+            if (url == null || !(url.startsWith("https://") || url.startsWith("http://"))) return;
             runOnUiThread(() -> {
                 try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))); } catch (Exception ignored) {}
             });
         }
 
         @JavascriptInterface public String request(String method, String path, String body) {
+            if (path == null || !path.startsWith("/") || path.contains("..")) {
+                return "{\"ok\":false,\"status\":400,\"error\":\"Chemin API refusé\"}";
+            }
             HttpURLConnection c = null;
             try {
                 URL u = new URL(base + path);
