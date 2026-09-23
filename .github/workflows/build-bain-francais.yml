@@ -27,9 +27,9 @@ jobs:
         working-directory: bain-francais-android
         run: gradle --no-daemon assembleDebug
       - name: Copy final APK
-        run: cp bain-francais-android/app/build/outputs/apk/debug/app-debug.apk Bain-de-Francais-APP-MADA-v1.0.apk
+        run: cp bain-francais-android/app/build/outputs/apk/debug/app-debug.apk Bain-de-Francais-APP-MADA-v1.1.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: Bain-de-Francais-APP-MADA-v1.0
-          path: Bain-de-Francais-APP-MADA-v1.0.apk
+          name: Bain-de-Francais-APP-MADA-v1.1
+          path: Bain-de-Francais-APP-MADA-v1.1.apk
           if-no-files-found: error
